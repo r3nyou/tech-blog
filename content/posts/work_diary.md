@@ -2,6 +2,8 @@
 title: "Work_diary"
 date: 2022-05-16T21:33:26+08:00
 draft: false
+tags: ["職場"]
+categories: ["職場"]
 ---
 
 > 這篇文是紀念來二天就離職的同事
