@@ -4,6 +4,11 @@ title: Marcus Jian blog
 theme: PaperMod
 
 params:
+  homeInfoParams:
+    Title: "not a real programmer"
+    Content: Hi, I'm Marcus, and I'm a mediocre programmer.
+  cover:
+    linkFullImages: true
   ShowPostNavLinks: true
 
 menu:
