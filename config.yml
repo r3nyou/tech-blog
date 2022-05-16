@@ -1,4 +1,4 @@
-baseURL: http://example.org/
+baseURL: "https://www.renyou.tech"
 languageCode: zh-tw
 title: Marcus Jian blog
 theme: PaperMod
