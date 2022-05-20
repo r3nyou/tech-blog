@@ -10,7 +10,7 @@ params:
   cover:
     linkFullImages: true
   ShowPostNavLinks: true
-
+ 
 menu:
   main:
     - identifier: categories

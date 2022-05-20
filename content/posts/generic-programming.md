@@ -1,8 +1,9 @@
 ---
 title: "這次是對 Generic programming 的思考"
-date: 2022-05-15T20:46:22+08:00
+date: 2022-05-01T20:46:22+08:00
 draft: false
-tags: ["程式設計", "C", "C++"]
+ShowToc: true
+tags: ["程式設計"]
 categories: ["Programming paradigm"]
 ---
 程式寫了幾年後，有了些感性認識，無論是想寫的更好，或是想學其他語言但覺得太多種學不完、也不知道怎麼學，只學了表面。
