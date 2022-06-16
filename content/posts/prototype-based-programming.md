@@ -211,7 +211,7 @@ console.log(student instanceof Student); // true
 
 備註，ECMAScript 標準第六版有提供基於舊有原型架構的 syntax sugar  "class"，可以用來建構物件、處理繼承。
 
-reference
+## reference
 - https://en.wikipedia.org/wiki/Prototype-based_programming
 - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes
 - https://262.ecma-international.org/5.1/#sec-15.2

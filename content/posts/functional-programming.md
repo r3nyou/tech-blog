@@ -7,7 +7,7 @@ tags: ["程式設計"]
 categories: ["Programming paradigm"]
 ---
 
-在這篇文[這次是對泛型 Generic programming 的思考](../generic-programming)中，講了泛型的本質就是對型別的抽象，這篇文將介紹更抽象的程式設計方法，函式語言程式設計(Functional programming) 到底是甚麼鬼。
+在[這次是對泛型 Generic programming 的思考](../generic-programming)文中，講了泛型的本質就是對型別的抽象，這篇文將介紹更抽象的程式設計方法，函式語言程式設計(Functional programming) 到底是甚麼鬼。
 
 ## 函式語言程式設計
 Functional programming 的理念來自數學的代數。
@@ -609,7 +609,7 @@ Functional programming 是古早就提出的概念，源自於 λ 演算；這�
   - 業務邏輯則例如馬有多少機率往前跑(前面的範例)
 
 
-reference
+## reference
 - https://en.wikipedia.org/wiki/Functional_programming
 - https://zh.wikipedia.org/wiki/%E6%83%B0%E6%80%A7%E6%B1%82%E5%80%BC
 - https://pkg.go.dev/net/http

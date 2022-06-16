@@ -15,6 +15,7 @@ categories: ["Programming paradigm"]
 目前物件導向被廣泛使用在大型專案中，優點是靈活性、可維護性；另外有部分人認為物件導向更容易分析、理解程式。
 
 物件導向領域有一本經典書籍，[Design Pattern](https://www.amazon.com/Design-Patterns-Object-Oriented-Addison-Wesley-Professional-ebook/dp/B000SEIBB8)，這本書介紹了 23 個設計模式，說的是二個觀念：
+
 **Program to an interface, not an implementation.**
 - 呼叫者不需要知道資料型別、資料結構、算法的細節
 - 呼叫者不需要知道實作細節，只要知道提供什麼介面
@@ -210,7 +211,7 @@ IoC 的設計會是：
 
 總之，這篇文章介紹了物件導向程式設計，透過範例說明核心的概念，同時介紹了幾種 Design pattern，接著透過程式設計、真實世界的範例說明 IoC，最後總結了優缺點。
 
-reference
+## reference
 - https://en.cppreference.com/w/cpp/language/raii
 - https://en.wikipedia.org/wiki/Inversion_of_control
 - https://en.wikipedia.org/wiki/Glue_code
