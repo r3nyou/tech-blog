@@ -1,18 +1,27 @@
 baseURL: "https://www.renyou.tech"
 languageCode: zh-tw
-title: Marcus Jian blog
 theme: PaperMod
 
 params:
   homeInfoParams:
-    Title: "not a real programmer"
+    Title: "Not a Real Programmer"
     Content: Hi, I'm Marcus, and I'm a mediocre programmer.
   cover:
     linkFullImages: true
   ShowPostNavLinks: true
+  socialIcons:
+    - name: "github"
+      url: "https://github.com/r3nyou"
+    - name: "email"
+      url: "mailto:renyou815@gmail.com"
+
  
 menu:
   main:
+    - identifier: home
+      name: Home
+      url: /
+      weight: 10
     - identifier: categories
       name: Categories
       url: /categories/
