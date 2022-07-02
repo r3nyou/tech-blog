@@ -80,7 +80,7 @@ inc() 返回另一個函式 incx()，可以用 inc() 來做各種版本的 inc �
 計算過程抽象，函式可以是變數，去描述一個值；函式也可以是參數、返回值，關注的是表達式，是問題的描述，是 what to do，而不是 how to do。
 
 ## Functional programming 思考方式
-Functional programming 思考是 descirbe what to do, rather than how to do，平常習慣的 procedure 的寫法稱為 Imperative programming，而 Functional programming 被稱為 Declarative porgramming。
+Functional programming 思考是 descirbe what to do, rather than how to do，平常習慣的 procedure 的寫法稱為 Imperative programming (指令式)，而 Functional programming 被稱為 Declarative porgramming (聲明式)。
 
 舉個例子來看看傳統寫法與函式語言的差別；比如現在有 3 隻馬，每隻有 5 次機會往前跑，每次往前的機率是 50%。
 
@@ -212,7 +212,7 @@ avg = reduce(lambda x,y: x+y, positive_num) / len(positive_num)
 ```
 先 filter x>0 的資料並返回新的陣列 positive_num，然後對 positive_num 進行求和 x+y 的 reduce 操作。
 
-map、reudce 不管輸入的資料是什麼，只單純控制「怎麼做」what to do(控制邏輯)，而 lambda 則是描述「做什麼」what to do(業務邏輯)，我們把控制邏輯藏在 map、reduce 中，讓程式只剩下業務邏輯，使程式碼更容易理解。
+map、reudce 不管輸入的資料是什麼，只單純控制「怎麼做」how to do(控制邏輯)，而 lambda 則是描述「做什麼」what to do(業務邏輯)，我們把控制邏輯藏在 map、reduce 中，讓程式只剩下業務邏輯，使程式碼更容易理解。
 
 ## pipeline 模式
 pipeline 源於 unix shell，把多個命令串起來，前面命令的輸出成為後面命令的輸入，完成流式計算。比如 shell command
@@ -604,7 +604,7 @@ Functional programming 是古早就提出的概念，源自於 λ 演算；這�
 總結一下裝飾模式就是在做：
 - 擴展現有函式的功能，在現有函式的功能上增加其他功能
 - 展現 Functional programming 擴充性的強大，函式能夠互相組合
-- 裝飾模式的設計方式，是把控制邏輯(what to do)抽象出來，與業務邏輯(how to do)分開
+- 裝飾模式的設計方式，是把控制邏輯(how to do)抽象出來，與業務邏輯(what to do)分開
   - 控制邏輯就是迴圈、router、print log 之類
   - 業務邏輯則例如馬有多少機率往前跑(前面的範例)
 
