@@ -151,7 +151,7 @@ C++ 解決了 C 的許多問題
 - 用 namespace 解決命名衝突問題
 - 用 try-catch 解決檢查返回值的問題
 - 用 class 解決物件建立、複製、刪除的問題
-- 用 operator overloading 達到操作上的泛型，比如上一篇的 cmpFn 比較函式，再比如 >> 操作符消除 printf() 的資料結構不夠泛型的問題
+- 用 operator overloading 達到操作上的泛型，比如上一篇的 cmpFn 比較函式，再比如 \>\> 操作符消除 printf() 的資料結構不夠泛型的問題
 - 用 template、virtual function、RTTI 達到更高層次的泛型與多型
 - 用 RAII、smart pointers，解決 C 語言中為了釋放資源而寫的骯髒、容易錯的程式碼
 - 用 STL 解決 C 語言中資料結構、演算法的問題
