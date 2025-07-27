@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<meta name="robots" content="noindex, nofollow">
+<title>Functional programming 到底是什麼鬼 | </title>
+<meta name="keywords" content="程式設計">
+<meta name="description" content="在這次是對泛型 Generic programming 的思考文中，講了泛型的本質就是對型別的抽象，這篇文將介紹更抽象的程式設計方法，函式語言程式設計(Functional programming) 到底是甚麼鬼。
+函式語言程式設計
+Functional programming 的理念來自數學的代數。
+f(x)=3x^2&#43;x&#43;1
+g(x)=2f(x)&#43;4=6x^2&#43;2x&#43;6
+h(x)=f(x)&#43;g(x)=9x^2&#43;3x&#43;7
+f(x) 是函式，g(x) 是把 f(x) 帶入並展開，h(x) 則是二個函式組成的二元函式。
+函式還能做遞迴，例如費式數列
+f(x)=f(x-1)&#43;f(x-2)
+Functional programming 就像數學表達式，定義輸入資料和輸出資料的關係，是一種 mapping 的概念。
+Functional programming 的特點:
+
+stateless: 無狀態，重複執行的話，函式內部的資料是不變的
+immutable: 不改動輸入資料，每次都返回新的資料
+
+優點
+
+沒有狀態，所以可以瘋狂並行(Parallelism)
+寫程式可以複製貼上，無狀態，不用擔心全域變數
+惰性求值
+確定性 f(x)=y 永遠都有同樣的結果
+
+缺點
+
+大量複製資料
+
+Functional programming 的技巧
+
+first class function: 函數可以當變數用，可以傳遞、返回、嵌套
+recursive: 簡化程式碼，把複查的問題，能夠簡單的描述
+tail recursion: 避免 function stack 過多，需要編譯器有支援
+map、reduce
+pipeline: 把函式放到一個陣列、list 中，資料會依照順序被各個函式操作，最終得到結果
+high order function: 把函式當參數，把傳入的函式做封裝，然後返回封裝後的函式
+currying: 簡化函式參數，把函式多個參數分解成多個函式封裝，每層函式都返回一個函式去接收下一個參數
+
+舉個例子說明 stateless，下面的程式是有狀態的，因為是對全域變數做 &#43;&#43;，多執行緒是不安全的。
+int cnt;
+void increment() {
+	cnt&#43;&#43;;
+}
+改成用參數傳遞，並行執行不需要鎖">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/posts/functional-programming/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.min.0ae5145492ee91fac5036e87965b1395678c6daee907d175e51d2af65e49fe1b.css" integrity="sha256-CuUUVJLukfrFA26HllsTlWeMba7pB9F15R0q9l5J/hs=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.min.555af97124d54bb1457985dd081b8f5616a48103aafeb30ac89fde835d65aa6c.js" integrity="sha256-VVr5cSTVS7FFeYXdCBuPVhakgQOq/rMKyJ/eg11lqmw="
+    onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/functional-programming/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --hljs-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+	<ul id="menu">
+            <li>
+                <a href="http://localhost:1313/categories/" title="Categories">
+                    <span>Categories</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/tags/" title="Tags">
+                    <span>Tags</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/archives/" title="Archives">
+                    <span>Archives</span>
+                </a>
+            </li>
+        </ul>
+        <div class="logo">
+            <div class="social-icons">
+    <a href="https://github.com/r3nyou" target="_blank" rel="noopener noreferrer me" title="Github">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path
+        d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+    </path>
+</svg>
+    </a>
+    <a href="mailto:renyou815@gmail.com" target="_blank" rel="noopener noreferrer me" title="Email">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 21" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+    <polyline points="22,6 12,13 2,6"></polyline>
+</svg>
+    </a>
+</div>
+
+        </div>
+    </nav>
+    <article class="first-entry home-info">
+        <header class="entry-header">
+            <h1>Not a Real Programmer</h1>
+        </header>
+        <div class="entry-content">
+            <p>Hi, I&rsquo;m Marcus, and I&rsquo;m a mediocre programmer.</p>
+        </div>
+        <footer class="entry-footer">
+            
+        </footer>
+    </article></header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title">
+      Functional programming 到底是什麼鬼
+    </h1>
+    <div class="post-meta">&lt;span title=&#39;2022-05-15 21:21:19 &#43;0800 CST&#39;&gt;May 15, 2022&lt;/span&gt;
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#%e5%87%bd%e5%bc%8f%e8%aa%9e%e8%a8%80%e7%a8%8b%e5%bc%8f%e8%a8%ad%e8%a8%88" aria-label="函式語言程式設計">函式語言程式設計</a></li>
+                <li>
+                    <a href="#functional-programming-%e7%9a%84%e6%8a%80%e5%b7%a7" aria-label="Functional programming 的技巧">Functional programming 的技巧</a></li>
+                <li>
+                    <a href="#functional-programming-%e6%80%9d%e8%80%83%e6%96%b9%e5%bc%8f" aria-label="Functional programming 思考方式">Functional programming 思考方式</a></li>
+                <li>
+                    <a href="#mapreducefilter" aria-label="Map、Reduce、Filter">Map、Reduce、Filter</a></li>
+                <li>
+                    <a href="#pipeline-%e6%a8%a1%e5%bc%8f" aria-label="pipeline 模式">pipeline 模式</a></li>
+                <li>
+                    <a href="#python-%e7%9a%84%e8%a3%9d%e9%a3%be%e6%a8%a1%e5%bc%8f-decorator" aria-label="Python 的裝飾模式 Decorator">Python 的裝飾模式 Decorator</a></li>
+                <li>
+                    <a href="#go-%e7%9a%84%e8%a3%9d%e9%a3%be%e6%a8%a1%e5%bc%8f-decorator" aria-label="Go 的裝飾模式 Decorator">Go 的裝飾模式 Decorator</a></li>
+                <li>
+                    <a href="#%e7%b8%bd%e7%b5%90" aria-label="總結">總結</a></li>
+                <li>
+                    <a href="#reference" aria-label="reference">reference</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><p>在<a href="../generic-programming">這次是對泛型 Generic programming 的思考</a>文中，講了泛型的本質就是對型別的抽象，這篇文將介紹更抽象的程式設計方法，函式語言程式設計(Functional programming) 到底是甚麼鬼。</p>
+<h2 id="函式語言程式設計">函式語言程式設計<a hidden class="anchor" aria-hidden="true" href="#函式語言程式設計">#</a></h2>
+<p>Functional programming 的理念來自數學的代數。</p>
+<pre tabindex="0"><code>f(x)=3x^2+x+1
+g(x)=2f(x)+4=6x^2+2x+6
+h(x)=f(x)+g(x)=9x^2+3x+7
+</code></pre><p>f(x) 是函式，g(x) 是把 f(x) 帶入並展開，h(x) 則是二個函式組成的二元函式。</p>
+<p>函式還能做遞迴，例如費式數列</p>
+<pre tabindex="0"><code>f(x)=f(x-1)+f(x-2)
+</code></pre><p>Functional programming 就像數學表達式，定義輸入資料和輸出資料的關係，是一種 mapping 的概念。</p>
+<p>Functional programming 的特點:</p>
+<ul>
+<li>stateless: 無狀態，重複執行的話，函式內部的資料是不變的</li>
+<li>immutable: 不改動輸入資料，每次都返回新的資料</li>
+</ul>
+<p>優點</p>
+<ul>
+<li>沒有狀態，所以可以瘋狂並行(Parallelism)</li>
+<li>寫程式可以複製貼上，無狀態，不用擔心全域變數</li>
+<li>惰性求值</li>
+<li>確定性 f(x)=y 永遠都有同樣的結果</li>
+</ul>
+<p>缺點</p>
+<ul>
+<li>大量複製資料</li>
+</ul>
+<h2 id="functional-programming-的技巧">Functional programming 的技巧<a hidden class="anchor" aria-hidden="true" href="#functional-programming-的技巧">#</a></h2>
+<ul>
+<li>first class function: 函數可以當變數用，可以傳遞、返回、嵌套</li>
+<li>recursive: 簡化程式碼，把複查的問題，能夠簡單的描述</li>
+<li>tail recursion: 避免 function stack 過多，需要編譯器有支援</li>
+<li>map、reduce</li>
+<li>pipeline: 把函式放到一個陣列、list 中，資料會依照順序被各個函式操作，最終得到結果</li>
+<li>high order function: 把函式當參數，把傳入的函式做封裝，然後返回封裝後的函式</li>
+<li>currying: 簡化函式參數，把函式多個參數分解成多個函式封裝，每層函式都返回一個函式去接收下一個參數</li>
+</ul>
+<p>舉個例子說明 stateless，下面的程式是有狀態的，因為是對全域變數做 ++，多執行緒是不安全的。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> cnt;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">increment</span>() {
+</span></span><span style="display:flex;"><span>	cnt<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>改成用參數傳遞，並行執行不需要鎖</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">increment</span>(<span style="color:#66d9ef">int</span> cnt) {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> cnt<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>另一個 python 的範例</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">inc</span>(x):
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">incx</span>(y):
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> x<span style="color:#f92672">+</span>y;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> incx;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>inc1 <span style="color:#f92672">=</span> inc(<span style="color:#ae81ff">1</span>);
+</span></span><span style="display:flex;"><span>inc2 <span style="color:#f92672">=</span> inc(<span style="color:#ae81ff">2</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(inc1(<span style="color:#ae81ff">3</span>)); <span style="color:#75715e"># 4</span>
+</span></span><span style="display:flex;"><span>print(inc2(<span style="color:#ae81ff">4</span>)); <span style="color:#75715e"># 6</span>
+</span></span></code></pre></div><p>inc() 返回另一個函式 incx()，可以用 inc() 來做各種版本的 inc 函式，這就是上面提到的 currying 技巧。</p>
+<p>計算過程抽象，函式可以是變數，去描述一個值；函式也可以是參數、返回值，關注的是表達式，是問題的描述，是 what to do，而不是 how to do。</p>
+<h2 id="functional-programming-思考方式">Functional programming 思考方式<a hidden class="anchor" aria-hidden="true" href="#functional-programming-思考方式">#</a></h2>
+<p>Functional programming 思考是 descirbe what to do, rather than how to do，平常習慣的 procedure 的寫法稱為 Imperative programming (指令式)，而 Functional programming 被稱為 Declarative porgramming (聲明式)。</p>
+<p>舉個例子來看看傳統寫法與函式語言的差別；比如現在有 3 隻馬，每隻有 5 次機會往前跑，每次往前的機率是 50%。</p>
+<p>Imperative programming 寫法如下(Python)：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> random <span style="color:#f92672">import</span> random
+</span></span><span style="display:flex;"><span>time <span style="color:#f92672">=</span> <span style="color:#ae81ff">5</span>
+</span></span><span style="display:flex;"><span>horse_pos <span style="color:#f92672">=</span> [<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">1</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">while</span> time:
+</span></span><span style="display:flex;"><span>    time <span style="color:#f92672">-=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#39;&#39;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(len(horse_pos)):
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> random() <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0.5</span>:
+</span></span><span style="display:flex;"><span>            horse_pos[i] <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">&#39;-&#39;</span> <span style="color:#f92672">*</span> horse_pos[i])
+</span></span></code></pre></div><p>把嵌套的迴圈重構成幾個函式，比較容易閱讀。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> random <span style="color:#f92672">import</span> random
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">run_step</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">global</span> time
+</span></span><span style="display:flex;"><span>    time <span style="color:#f92672">-=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    move_horse()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">move_horse</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(len(horse_pos)):
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> random() <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0.5</span>:
+</span></span><span style="display:flex;"><span>            horse_pos[i] <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">draw</span>():
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#39;&#39;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> pos <span style="color:#f92672">in</span> horse_pos:
+</span></span><span style="display:flex;"><span>        draw_horse(pos)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">draw_horse</span>(pos):
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#39;-&#39;</span> <span style="color:#f92672">*</span> pos)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>time <span style="color:#f92672">=</span> <span style="color:#ae81ff">5</span>
+</span></span><span style="display:flex;"><span>horse_pos <span style="color:#f92672">=</span> [<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">1</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">while</span> time:
+</span></span><span style="display:flex;"><span>    run_step()
+</span></span><span style="display:flex;"><span>    draw()
+</span></span></code></pre></div><p>上面的程式從主要的循環中，可以清楚看到有 run_step()、draw() 二個主要邏輯，各邏輯被各自封裝成函式，抽象了計算過程，於是程式碼變成自我解釋的。</p>
+<p>但這段程式有個問題，封裝成函式後，這些函式都依賴共享的變數來同步狀態，於是在讀程式碼時，當函式內部訪問某個全域變數，我們就要去查這個變數的上下文，然後心算這個變數的狀態，才能知道程式的邏輯；相當於這些函式必須要知道其他函式怎麼修改共用變數的，所以這些函式是有狀態的。</p>
+<p>有狀態的程式，無論是對並行計算、程式碼重用性，都是缺點；那讓我們來看 Functional programming 的寫法。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> random <span style="color:#f92672">import</span> random
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">race</span>(state):
+</span></span><span style="display:flex;"><span>    draw(state)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> state[<span style="color:#e6db74">&#39;time&#39;</span>]:
+</span></span><span style="display:flex;"><span>        race(run_step(state))
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">run_step</span>(state):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;time&#39;</span>: state[<span style="color:#e6db74">&#39;time&#39;</span>] <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;horse_pos&#39;</span>: move_horse(state[<span style="color:#e6db74">&#39;horse_pos&#39;</span>])
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">move_horse</span>(horse_pos):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> [x<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span> <span style="color:#66d9ef">if</span> random() <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0.5</span> <span style="color:#66d9ef">else</span> x <span style="color:#66d9ef">for</span> x <span style="color:#f92672">in</span> horse_pos]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">draw</span>(state):
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#39;&#39;</span>)
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#39;</span><span style="color:#f92672">.</span>join(map(draw_horse, state[<span style="color:#e6db74">&#39;horse_pos&#39;</span>])))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">draw_horse</span>(pos):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#39;-&#39;</span> <span style="color:#f92672">*</span> pos
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>race({<span style="color:#e6db74">&#39;time&#39;</span>: <span style="color:#ae81ff">5</span>, <span style="color:#e6db74">&#39;horse_pos&#39;</span>: [<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>]})
+</span></span></code></pre></div><p>一樣把邏輯封裝成函式，且都是 functional programming 的設計，注意以下幾點</p>
+<ul>
+<li>函式間不再共享變數，改用參數、返回值來傳遞資料</li>
+<li>函式內沒有 temporary variable</li>
+<li>for 迴圈被遞迴取代</li>
+<li>程式碼更接近於描述問題本身</li>
+</ul>
+<h2 id="mapreducefilter">Map、Reduce、Filter<a hidden class="anchor" aria-hidden="true" href="#mapreducefilter">#</a></h2>
+<p>現在很多語言都支援 Map、Reduce、Filter，這三個函式的概念也是源於 functional programming。</p>
+<p>來看一個範例，把字串陣列都轉成小寫，平常的寫法如下</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>upcase <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#39;HELLO&#39;</span>, <span style="color:#e6db74">&#39;FUNCTIONAL&#39;</span>, <span style="color:#e6db74">&#39;PROGRAMMING&#39;</span>]
+</span></span><span style="display:flex;"><span>lowcase <span style="color:#f92672">=</span> []
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(len(upcase)):
+</span></span><span style="display:flex;"><span>	lowcase<span style="color:#f92672">.</span>append(upcase[i]<span style="color:#f92672">.</span>lower())
+</span></span></code></pre></div><p>如果用 Map 寫成 Functional programming</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">toLower</span>(item):
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> item<span style="color:#f92672">.</span>lower();
+</span></span><span style="display:flex;"><span>	
+</span></span><span style="display:flex;"><span>lowcase <span style="color:#f92672">=</span> map(toLower, [<span style="color:#e6db74">&#39;HELLO&#39;</span>, <span style="color:#e6db74">&#39;FUNCTIONAL&#39;</span>, <span style="color:#e6db74">&#39;PROGRAMMING&#39;</span>])
+</span></span></code></pre></div><p>toLower() 單純對傳進來的參數做操作，然後在 map 函式就能很清楚描述做了什麼，而不像平常的寫法，要去讀迴圈裡面到底做了什麼。</p>
+<p>再舉另一個例子。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>num <span style="color:#f92672">=</span> [<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">3</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">9</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">8</span>, <span style="color:#ae81ff">2</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">4</span>]
+</span></span><span style="display:flex;"><span>positive_cnt <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>positive_sum <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(len(num)):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> num[i] <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>:
+</span></span><span style="display:flex;"><span>        positive_cnt <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>        positive_sum <span style="color:#f92672">+=</span> num[i]
+</span></span><span style="display:flex;"><span>    	
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> positive_cnt <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>:
+</span></span><span style="display:flex;"><span>	avg <span style="color:#f92672">=</span> positive_sum <span style="color:#f92672">/</span> positive_cnt
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(avg)
+</span></span></code></pre></div><p>這次稍微難讀了一點，目的是只計算正數的平均值。</p>
+<p>再來看 filter、reduce 的版本。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>positive_num <span style="color:#f92672">=</span> filter(<span style="color:#66d9ef">lambda</span> x: x<span style="color:#f92672">&gt;</span><span style="color:#ae81ff">0</span>, num)
+</span></span><span style="display:flex;"><span>avg <span style="color:#f92672">=</span> reduce(<span style="color:#66d9ef">lambda</span> x,y: x<span style="color:#f92672">+</span>y, positive_num) <span style="color:#f92672">/</span> len(positive_num)
+</span></span></code></pre></div><p>先 filter x&gt;0 的資料並返回新的陣列 positive_num，然後對 positive_num 進行求和 x+y 的 reduce 操作。</p>
+<p>map、reudce 不管輸入的資料是什麼，只單純控制「怎麼做」how to do(控制邏輯)，而 lambda 則是描述「做什麼」what to do(業務邏輯)，我們把控制邏輯藏在 map、reduce 中，讓程式只剩下業務邏輯，使程式碼更容易理解。</p>
+<h2 id="pipeline-模式">pipeline 模式<a hidden class="anchor" aria-hidden="true" href="#pipeline-模式">#</a></h2>
+<p>pipeline 源於 unix shell，把多個命令串起來，前面命令的輸出成為後面命令的輸入，完成流式計算。比如 shell command</p>
+<pre tabindex="0"><code>ps aux | awk &#39;{print $2}&#39; | sort -n | xargs echo
+</code></pre><p>這個命令會把所有的 process ID 取出來，排序，顯示。</p>
+<p>如果類比成函式的方式，就是多層的嵌套。</p>
+<pre tabindex="0"><code>xargs(echo, sort(n, awk(&#39;print $2&#39;, ps aux)))
+</code></pre><p>順帶一提，這些函式就好比 micro service 的服務編排一樣，這些高大上技術的身上，往往能看到古老的經典思想，例如 unix；很多分布式的架構，都借鑒了傳統微觀的技術，所以理論是相通的，只是工程上有不同實踐。</p>
+<p>那接下來看一個 Python 的例子，這段程式有三個步驟</p>
+<ol>
+<li>找偶數</li>
+<li>乘以 3</li>
+<li>轉成字串返回</li>
+</ol>
+<p>傳統的非函式寫法:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">process</span>(num):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> num <span style="color:#f92672">%</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>    num <span style="color:#f92672">=</span> num <span style="color:#f92672">*</span> <span style="color:#ae81ff">3</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#39;Number: </span><span style="color:#e6db74">%s</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">%</span> num
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>nums <span style="color:#f92672">=</span> [<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">3</span>,<span style="color:#ae81ff">4</span>,<span style="color:#ae81ff">5</span>,<span style="color:#ae81ff">6</span>,<span style="color:#ae81ff">7</span>,<span style="color:#ae81ff">8</span>,<span style="color:#ae81ff">9</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> num <span style="color:#f92672">in</span> nums:
+</span></span><span style="display:flex;"><span>    print(process(num))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># None</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Number: 6</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># None</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Number: 12</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># None</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Number: 18</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># None</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Number: 24</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># None</span>
+</span></span></code></pre></div><p>這段程式有幾個問題</p>
+<ol>
+<li>偶數會輸出 None</li>
+<li>process() 的程式碼不好讀</li>
+</ol>
+<p>接下來把程式改成 pipeline。</p>
+<p>首先把三個步驟寫成子函式</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">even_filter</span>(nums):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> num <span style="color:#f92672">in</span> nums:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> num <span style="color:#f92672">%</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">yield</span> num
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">multiple_by_three</span>(nums):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> num <span style="color:#f92672">in</span> nums:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">yield</span> num <span style="color:#f92672">*</span> <span style="color:#ae81ff">3</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">convert_to_string</span>(nums):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> num <span style="color:#f92672">in</span> nums:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">yield</span> <span style="color:#e6db74">&#39;Number: </span><span style="color:#e6db74">%s</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">%</span> num
+</span></span></code></pre></div><p>再來把函式串起來用</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>nums <span style="color:#f92672">=</span> [<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">3</span>,<span style="color:#ae81ff">4</span>,<span style="color:#ae81ff">5</span>,<span style="color:#ae81ff">6</span>,<span style="color:#ae81ff">7</span>,<span style="color:#ae81ff">8</span>,<span style="color:#ae81ff">9</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>pipeline <span style="color:#f92672">=</span> convert_to_string(multiple_by_three(even_filter(nums)))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> num <span style="color:#f92672">in</span> pipeline:
+</span></span><span style="display:flex;"><span>    print(num)
+</span></span></code></pre></div><p>上面用到 yield 關鍵字，是 lazy evluation 的概念，函式返回一個 generator，可以被迭代的物件，而沒有真的去執行函式，等到 generator 被迭代時，yield 函式才會真的執行，每次執行會停在 yield 的語句，等下一次迭代。</p>
+<p>再來改成用 Map &amp; Reduce(迴圈只能處理順序型的資料結構)</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">even_filter</span>(nums):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> filter(<span style="color:#66d9ef">lambda</span> x: x<span style="color:#f92672">%</span><span style="color:#ae81ff">2</span><span style="color:#f92672">==</span><span style="color:#ae81ff">0</span>, nums)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">multiple_by_three</span>(nums):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> map(<span style="color:#66d9ef">lambda</span> x: x<span style="color:#f92672">*</span><span style="color:#ae81ff">3</span>, nums)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">convert_to_string</span>(nums):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> map(<span style="color:#66d9ef">lambda</span> x: <span style="color:#e6db74">&#39;Number: </span><span style="color:#e6db74">%s</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">%</span> x, nums)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>nums <span style="color:#f92672">=</span> [<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">3</span>,<span style="color:#ae81ff">4</span>,<span style="color:#ae81ff">5</span>,<span style="color:#ae81ff">6</span>,<span style="color:#ae81ff">7</span>,<span style="color:#ae81ff">8</span>,<span style="color:#ae81ff">9</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>pipeline <span style="color:#f92672">=</span> convert_to_string(multiple_by_three(even_filter(nums)))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> num <span style="color:#f92672">in</span> pipeline:
+</span></span><span style="display:flex;"><span>    print(num)
+</span></span></code></pre></div><p>程式碼更容易讀了，但必須用嵌套的方式使用 pipeline，理想的方式要能像下面這樣</p>
+<pre tabindex="0"><code>pipeline_func(nums, [
+	even_filter,
+	multiple_by_three,
+	convert_to_string
+])
+</code></pre><p>其實就是 reduce 多個函式</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">pipeline_func</span>(data, fns):
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> reduce(<span style="color:#66d9ef">lambda</span> a, x: x(a), fns, data)
+</span></span></code></pre></div><p>可以用 Python 的 force()、裝飾模式(decorator)，寫的更像 pipeline</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Pipe</span>(object):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">__init__</span>(self, func):
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>func <span style="color:#f92672">=</span> func
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">__ror__</span>(self, other):
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">generator</span>():
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span> obj <span style="color:#f92672">in</span> other:
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> obj <span style="color:#f92672">is</span> <span style="color:#f92672">not</span> <span style="color:#66d9ef">None</span>:
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">yield</span> self<span style="color:#f92672">.</span>func(obj)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> generator()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@Pipe</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">even_filter</span>(num):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> num <span style="color:#66d9ef">if</span> num <span style="color:#f92672">%</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">None</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@Pipe</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">multiple_by_three</span>(num):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> num <span style="color:#f92672">*</span> <span style="color:#ae81ff">3</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@Pipe</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">convert_to_string</span>(num):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#39;Number: </span><span style="color:#e6db74">%s</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">%</span> num
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@Pipe</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">echo</span>(item):
+</span></span><span style="display:flex;"><span>    print(item)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> item
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">force</span>(sqs):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> item <span style="color:#f92672">in</span> sqs: <span style="color:#66d9ef">pass</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>nums <span style="color:#f92672">=</span> [<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">3</span>,<span style="color:#ae81ff">4</span>,<span style="color:#ae81ff">5</span>,<span style="color:#ae81ff">6</span>,<span style="color:#ae81ff">7</span>,<span style="color:#ae81ff">8</span>,<span style="color:#ae81ff">9</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>force(nums <span style="color:#f92672">|</span> even_filter <span style="color:#f92672">|</span> multiple_by_three <span style="color:#f92672">|</span> convert_to_string <span style="color:#f92672">|</span> echo)
+</span></span></code></pre></div><p>上面範例中，利用了 Python 的 Decorator、Generator 功能，把多個函式組合成 pipeline，接下來會介紹裝飾模式(Decorator) 如何運作。</p>
+<h2 id="python-的裝飾模式-decorator">Python 的裝飾模式 Decorator<a hidden class="anchor" aria-hidden="true" href="#python-的裝飾模式-decorator">#</a></h2>
+<p>Python 的 Decorator 使用上類似 Java 的 Annoration 類似，但相對更單純，簡單說就是 Functional porgramming 的技巧，「用一個函式來構造另一個函式」。</p>
+<p>來看看 Hello, world 範例。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">hello</span>(fn):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">wrapper</span>():
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">&#34;hello, </span><span style="color:#e6db74">%s</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">%</span> fn<span style="color:#f92672">.</span>__name__)
+</span></span><span style="display:flex;"><span>        fn()
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">&#34;bye, </span><span style="color:#e6db74">%s</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">%</span> fn<span style="color:#f92672">.</span>__name__)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> wrapper
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@hello</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">Marcus</span>():
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#34;I am Marcus&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Marcus()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># result:</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># hello, Marcus</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># I am Marcus</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># bye, Marcus</span>
+</span></span></code></pre></div><p>上面程式的重點：</p>
+<ol>
+<li>Marcus() 前面有個 @hello 註解，就是前面定義的 hello()</li>
+<li>hello() 中需要一個 fn 參數，用來做 callback</li>
+<li>hello() 返回一個 inner 函式 wrapper()，wrapper() 呼叫了傳進來的 fn，並在 callback 前後加了另外二行</li>
+</ol>
+<p>使用某個 @decorator 裝飾某個函式時，Python 解釋器會做下面範例的轉換</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#a6e22e">@decorator</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">func</span>():
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">pass</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 轉換成</span>
+</span></span><span style="display:flex;"><span>func <span style="color:#f92672">=</span> decorator(func)
+</span></span></code></pre></div><p>這不只是把 func 當成參數傳到 decorator 中，再進行 callback 而已，還把 decorator 的返回值指派給原本的 func。</p>
+<p>再來看一個帶參數的 decorator 範例。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">makeHtmlTag</span>(tag, <span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>kwds):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">real_decorator</span>(fn):
+</span></span><span style="display:flex;"><span>        css_class <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34; class=&#39;</span><span style="color:#e6db74">{0}</span><span style="color:#e6db74">&#39;&#34;</span><span style="color:#f92672">.</span>format(kwds[<span style="color:#e6db74">&#34;css_class&#34;</span>]) <span style="color:#66d9ef">if</span> <span style="color:#e6db74">&#34;css_class&#34;</span> <span style="color:#f92672">in</span> kwds <span style="color:#66d9ef">else</span> <span style="color:#e6db74">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">wrapper</span>(<span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>kwds):
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;&lt;&#34;</span><span style="color:#f92672">+</span>tag<span style="color:#f92672">+</span>css_class<span style="color:#f92672">+</span><span style="color:#e6db74">&#34;&gt;&#34;</span> <span style="color:#f92672">+</span> fn(<span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>kwds) <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;&lt;/&#34;</span><span style="color:#f92672">+</span>tag<span style="color:#f92672">+</span><span style="color:#e6db74">&#34;&gt;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> wrapper
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> real_decorator
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@makeHtmlTag</span>(tag<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;b&#34;</span>, css_class<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;bold_css&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@makeHtmlTag</span>(tag<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;i&#34;</span>, css_class<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;italic_css&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">hello</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;hello, world&#34;</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>print(hello())
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># &lt;b class=&#39;bold_css&#39;&gt;&lt;i class=&#39;italic_css&#39;&gt;hello, world&lt;/i&gt;&lt;/b&gt;</span>
+</span></span></code></pre></div><p>為了讓 makeHtmlTag 帶二個參數，所以先返回一個 decorator，就可以做到 hello = makeHtmlTag(arg1, arg2)(hello)；然後進到真正 decorator 的邏輯，返回一個 wrapper，wrapper 中 callback hello。</p>
+<p>此外，Python 也支援類別方式的 decorator：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">myDecorator</span>(object):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">__init__</span>(self, fn):
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">&#34;myDecorator.__init__()&#34;</span>)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>fn <span style="color:#f92672">=</span> fn
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">__call__</span>(self):
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>fn()
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">&#34;myDecorator.__call__()&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@myDecorator</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">aFunc</span>():
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#34;aFunc()&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;decorate complete&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>aFunc()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># myDecorator.__init__()</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># decorate complete</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># aFunc()</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># myDecorator.__call__()</span>
+</span></span></code></pre></div><p>可以看到執行的順序</p>
+<ol>
+<li>__init__() 在給某個函式 decorator 時就被呼叫；所以參數需要一個 fn，就是被 decorate 的函式</li>
+<li>__call__() 是在被 decorator 的函式被呼叫時才執行</li>
+</ol>
+<p>來看一個比較實際的範例，下面的程式功能是用 URL 註冊，並呼叫相關的函式：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyApp</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">__init__</span>(self):
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>func_map <span style="color:#f92672">=</span> {}
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">register</span>(self, name):
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">func_wrapper</span>(func):
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>func_map[name] <span style="color:#f92672">=</span> func
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> func
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> func_wrapper
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">call_method</span>(self, name<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>):
+</span></span><span style="display:flex;"><span>        func <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>func_map<span style="color:#f92672">.</span>get(name, <span style="color:#66d9ef">None</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> func <span style="color:#f92672">is</span> <span style="color:#66d9ef">None</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">raise</span> <span style="color:#a6e22e">Exception</span>(<span style="color:#e6db74">&#34;unregistered function - &#34;</span> <span style="color:#f92672">+</span> str(name))
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> func()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>app <span style="color:#f92672">=</span> MyApp()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@app.register</span>(<span style="color:#e6db74">&#39;/&#39;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">main_page_func</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;This is main page&#34;</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@app.register</span>(<span style="color:#e6db74">&#39;/next_page&#39;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">next_page_func</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;This is next page&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(app<span style="color:#f92672">.</span>call_method(<span style="color:#e6db74">&#39;/&#39;</span>))
+</span></span><span style="display:flex;"><span>print(app<span style="color:#f92672">.</span>call_method(<span style="color:#e6db74">&#39;/next_page&#39;</span>))
+</span></span></code></pre></div><p>上面範例和一般 decorator 不同，一般是用 __call__() ， 但以上範例是用 call_method 去主動呼叫。</p>
+<h2 id="go-的裝飾模式-decorator">Go 的裝飾模式 Decorator<a hidden class="anchor" aria-hidden="true" href="#go-的裝飾模式-decorator">#</a></h2>
+<p>Python 有 syntax surgar，所以寫起來比較簡潔，那接下來看一下沒有 syntax sugar 該如何做到，以下是 Go 的範例。</p>
+<p>來看看 Hello, world 範例。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> <span style="color:#e6db74">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">decorator</span>(<span style="color:#a6e22e">f</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">s</span> <span style="color:#66d9ef">string</span>)) <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">s</span> <span style="color:#66d9ef">string</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">s</span> <span style="color:#66d9ef">string</span>) {
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;start&#34;</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">f</span>(<span style="color:#a6e22e">s</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;end&#34;</span>)
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">Hello</span>(<span style="color:#a6e22e">s</span> <span style="color:#66d9ef">string</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">s</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">decorator</span>(<span style="color:#a6e22e">Hello</span>)(<span style="color:#e6db74">&#34;Hello, World&#34;</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>這段程式的重點：</p>
+<ul>
+<li>用 high order function，就是 decorator()，先把 Hello() 當成參數傳入，並返回一個匿名函式，這個匿名函式中，除了呼叫傳進來的 Hello() 以外，也另外增加了語句</li>
+<li>Go 沒有像 Python 一樣支援 @decorator，所以裝飾 hello 看起來就比較醜；稍微改善可以像下面這樣用：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">hello</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">decorator</span>(<span style="color:#a6e22e">hello</span>)
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">hello</span>(<span style="color:#e6db74">&#34;Hello, World&#34;</span>)
+</span></span></code></pre></div><p>再來看一個 HTTP route 的例子：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">WithServerHeader</span>(<span style="color:#a6e22e">h</span> <span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">HandlerFunc</span>) <span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">HandlerFunc</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">w</span> <span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">ResponseWriter</span>, <span style="color:#a6e22e">r</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">Request</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;---&gt;WithServerHeader()&#34;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">w</span>.<span style="color:#a6e22e">Header</span>().<span style="color:#a6e22e">Set</span>(<span style="color:#e6db74">&#34;Server&#34;</span>, <span style="color:#e6db74">&#34;HelloServer v0.0.1&#34;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">h</span>(<span style="color:#a6e22e">w</span>, <span style="color:#a6e22e">r</span>)
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span> 
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">WithAuthCookie</span>(<span style="color:#a6e22e">h</span> <span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">HandlerFunc</span>) <span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">HandlerFunc</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">w</span> <span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">ResponseWriter</span>, <span style="color:#a6e22e">r</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">Request</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;---&gt;WithAuthCookie()&#34;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">cookie</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">Cookie</span>{<span style="color:#a6e22e">Name</span>: <span style="color:#e6db74">&#34;Auth&#34;</span>, <span style="color:#a6e22e">Value</span>: <span style="color:#e6db74">&#34;Pass&#34;</span>, <span style="color:#a6e22e">Path</span>: <span style="color:#e6db74">&#34;/&#34;</span>}
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">SetCookie</span>(<span style="color:#a6e22e">w</span>, <span style="color:#a6e22e">cookie</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">h</span>(<span style="color:#a6e22e">w</span>, <span style="color:#a6e22e">r</span>)
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span> 
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">WithBasicAuth</span>(<span style="color:#a6e22e">h</span> <span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">HandlerFunc</span>) <span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">HandlerFunc</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">w</span> <span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">ResponseWriter</span>, <span style="color:#a6e22e">r</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">Request</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;---&gt;WithBasicAuth()&#34;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">cookie</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">Cookie</span>(<span style="color:#e6db74">&#34;Auth&#34;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> <span style="color:#f92672">||</span> <span style="color:#a6e22e">cookie</span>.<span style="color:#a6e22e">Value</span> <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#34;Pass&#34;</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">w</span>.<span style="color:#a6e22e">WriteHeader</span>(<span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">StatusForbidden</span>)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">h</span>(<span style="color:#a6e22e">w</span>, <span style="color:#a6e22e">r</span>)
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span> 
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">WithDebugLog</span>(<span style="color:#a6e22e">h</span> <span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">HandlerFunc</span>) <span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">HandlerFunc</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">w</span> <span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">ResponseWriter</span>, <span style="color:#a6e22e">r</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">Request</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;---&gt;WithDebugLog&#34;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">ParseForm</span>()
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">Form</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;path&#34;</span>, <span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">URL</span>.<span style="color:#a6e22e">Path</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;scheme&#34;</span>, <span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">URL</span>.<span style="color:#a6e22e">Scheme</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">Form</span>[<span style="color:#e6db74">&#34;url_long&#34;</span>])
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">k</span>, <span style="color:#a6e22e">v</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">Form</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;key:&#34;</span>, <span style="color:#a6e22e">k</span>)
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;val:&#34;</span>, <span style="color:#a6e22e">strings</span>.<span style="color:#a6e22e">Join</span>(<span style="color:#a6e22e">v</span>, <span style="color:#e6db74">&#34;&#34;</span>))
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">h</span>(<span style="color:#a6e22e">w</span>, <span style="color:#a6e22e">r</span>)
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">hello</span>(<span style="color:#a6e22e">w</span> <span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">ResponseWriter</span>, <span style="color:#a6e22e">r</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">Request</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;Received Request %s from %s\n&#34;</span>, <span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">URL</span>.<span style="color:#a6e22e">Path</span>, <span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">RemoteAddr</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Fprintf</span>(<span style="color:#a6e22e">w</span>, <span style="color:#e6db74">&#34;Hello, World! &#34;</span><span style="color:#f92672">+</span><span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">URL</span>.<span style="color:#a6e22e">Path</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>上面的程式有很多函式，有寫 HTTP header 的、有寫入 Cookie 的、有認證 Cookie 的與寫 log 的，使用的時候可以嵌套多個裝飾。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">HandleFunc</span>(<span style="color:#e6db74">&#34;/v1/hello&#34;</span>, <span style="color:#a6e22e">WithServerHeader</span>(<span style="color:#a6e22e">WithAuthCookie</span>(<span style="color:#a6e22e">hello</span>)))
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">HandleFunc</span>(<span style="color:#e6db74">&#34;/v2/hello&#34;</span>, <span style="color:#a6e22e">WithServerHeader</span>(<span style="color:#a6e22e">WithBasicAuth</span>(<span style="color:#a6e22e">hello</span>)))
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">HandleFunc</span>(<span style="color:#e6db74">&#34;/v3/hello&#34;</span>, <span style="color:#a6e22e">WithServerHeader</span>(<span style="color:#a6e22e">WithBasicAuth</span>(<span style="color:#a6e22e">WithDebugLog</span>(<span style="color:#a6e22e">hello</span>))))
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">ListenAndServe</span>(<span style="color:#e6db74">&#34;:8080&#34;</span>, <span style="color:#66d9ef">nil</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Fatal</span>(<span style="color:#e6db74">&#34;ListenAndServe: &#34;</span>, <span style="color:#a6e22e">err</span>)
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>如果覺得嵌套比較醜，想改成 pipeline 的話，要先寫一個函式來走訪並呼叫各 decorator：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">HttpHandlerDecorator</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">HandlerFunc</span>) <span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">HandlerFunc</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">Handler</span>(<span style="color:#a6e22e">h</span> <span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">HandlerFunc</span>, <span style="color:#a6e22e">decors</span> <span style="color:#f92672">...</span><span style="color:#a6e22e">HttpHandlerDecorator</span>) <span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">HandlerFunc</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">decors</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">d</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">decors</span>[len(<span style="color:#a6e22e">decors</span>) <span style="color:#f92672">-</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>] <span style="color:#75715e">// iterate in reverse</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">h</span> = <span style="color:#a6e22e">d</span>(<span style="color:#a6e22e">h</span>)
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">h</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>然後就能像 pipeline 使用了。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">HandleFunc</span>(<span style="color:#e6db74">&#34;/v4/hello&#34;</span>, <span style="color:#a6e22e">Handler</span>(<span style="color:#a6e22e">hello</span>, <span style="color:#a6e22e">WithServerHeader</span>, <span style="color:#a6e22e">WithBasicAuth</span>, <span style="color:#a6e22e">WithDebugLog</span>))
+</span></span></code></pre></div><h2 id="總結">總結<a hidden class="anchor" aria-hidden="true" href="#總結">#</a></h2>
+<p>Functional programming 是古早就提出的概念，源自於 λ 演算；這篇文章透過幾個例子對比了非函式與函式語言設計的不同，再來介紹了 Map、Reduce、Pipeline 等技術，最後透過 Python 與 Go 的範例，來說明裝飾模式。</p>
+<p>總結一下裝飾模式就是在做：</p>
+<ul>
+<li>擴展現有函式的功能，在現有函式的功能上增加其他功能</li>
+<li>展現 Functional programming 擴充性的強大，函式能夠互相組合</li>
+<li>裝飾模式的設計方式，是把控制邏輯(how to do)抽象出來，與業務邏輯(what to do)分開
+<ul>
+<li>控制邏輯就是迴圈、router、print log 之類</li>
+<li>業務邏輯則例如馬有多少機率往前跑(前面的範例)</li>
+</ul>
+</li>
+</ul>
+<h2 id="reference">reference<a hidden class="anchor" aria-hidden="true" href="#reference">#</a></h2>
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Functional_programming">https://en.wikipedia.org/wiki/Functional_programming</a></li>
+<li><a href="https://zh.wikipedia.org/wiki/%E6%83%B0%E6%80%A7%E6%B1%82%E5%80%BC">https://zh.wikipedia.org/wiki/%E6%83%B0%E6%80%A7%E6%B1%82%E5%80%BC</a></li>
+<li><a href="https://pkg.go.dev/net/http">https://pkg.go.dev/net/http</a></li>
+</ul>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/tags/%E7%A8%8B%E5%BC%8F%E8%A8%AD%E8%A8%88/">程式設計</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="http://localhost:1313/posts/work-diary/">
+    <span class="title">« Prev</span>
+    <br>
+    <span>寫日誌這種事，不管到幾歲都討厭</span>
+  </a>
+  <a class="next" href="http://localhost:1313/posts/generic-programming/">
+    <span class="title">Next »</span>
+    <br>
+    <span>這次是對 Generic programming 的思考</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2025 <a href="http://localhost:1313/"></a></span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

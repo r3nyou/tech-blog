@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>職場 on </title>
+    <link>http://localhost:1313/tags/%E8%81%B7%E5%A0%B4/</link>
+    <description>Recent content in 職場 on </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-tw</language>
+    <lastBuildDate>Mon, 16 May 2022 21:33:26 +0800</lastBuildDate><atom:link href="http://localhost:1313/tags/%E8%81%B7%E5%A0%B4/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>寫日誌這種事，不管到幾歲都討厭</title>
+      <link>http://localhost:1313/posts/work-diary/</link>
+      <pubDate>Mon, 16 May 2022 21:33:26 +0800</pubDate>
+      
+      <guid>http://localhost:1313/posts/work-diary/</guid>
+      <description>&lt;blockquote&gt;
+&lt;p&gt;這篇文是紀念來二天就離職的同事&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;新同事來二天就離職，說每天晨會要報告工作進度、寫工作日誌，壓力太大。&lt;/p&gt;
+&lt;p&gt;雖然我也很討厭寫日誌，從小就不愛簽聯絡簿，但工作日誌實屬必要，我還是堅持每天寫。這是我某二天的工作日誌：&lt;/p&gt;
+&lt;p&gt;2021-04-15&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;頭痛，不想工作&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;2021-04-16&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;完成了依據 sku 統計 GA event，並且合併 term 的功能&lt;/li&gt;
+&lt;li&gt;makeTagReport 改成產生二個 mongoDB collection（document term map skus &amp;amp; sku performance），過程需要用 go 執行另一個 command，發現使用 command 帶參數的問題，&lt;code&gt; out, err := exec.Command(&amp;quot;./cobraCommand type --file=test.csv&amp;quot;).Output()&lt;/code&gt; 出現錯誤訊息 fork exec no such file or directory，後來看&lt;a href=&#34;https://pkg.go.dev/os/exec#Command&#34;&gt;文件&lt;/a&gt;裡有關於參數的說明: If name contains no path separators, Command uses LookPath to resolve name to a complete path if possible. Otherwise it uses name directly as Path. 原來 Command 的 name 參數無法寫整條命令，因為會被當成路徑，所以參數只能在後面帶入，例如 &lt;code&gt;out, err := exec.Command(“./ga-report”, “makeTagReport”, “--file=test.csv”).Output()&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;我對工作日誌的要求是&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

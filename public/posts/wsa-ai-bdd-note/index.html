@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<meta name="robots" content="noindex, nofollow">
+<title>水球軟體學院 「用 BDD 實現百倍效率的 Vibe Coding」心得 | </title>
+<meta name="keywords" content="">
+<meta name="description" content="這篇文章記錄了我參加了水球軟體學院的 workshop「用 BDD 實現百倍效率的 Vibe Coding」的心得。
+https://waterballsa.tw/design-pattern/
+課程當天蠻輕鬆的，一直指揮 AI 寫程式 XD，但收穫卻很豐富。因為水球潘示範的很清楚，一開始先示範大部分人（包括我 XD）現在是怎麼跟 AI 協作的，基本上就是：下 prompt → 等 AI 寫完程式 → 花很多時間 review。運氣好的話不用改，但大部分還是需要改。
+改程式碼有二種選擇：
+
+手動改。會讓開發體驗很差，必須人肉找出那 5~10% 的小錯誤，通常都蠻隱晦，而且因為不是自己寫的，所以特別難找。
+下 prompt 叫 AI 重寫 → 重複試幾次發現還是有錯，只好將就選一版稍微好的，然後還是要手動改。
+
+當天上課就是循序漸進示範，如何能做到 95% 正確率，而且如果要做到更高正確率，也有說明可能的做法了。
+其實我當工程師也 6 年了，有時候會覺得上班到有點麻木。但在 AI 出現後，而且上完課得到一個超酷的方法論，我又燃起熱血的心，覺得很新鮮很有趣，覺得躍躍欲試～
+以下是筆記
+一、軟體工程的本質與 AI 的挑戰
+軟體工程的本質問題，就是功能需求的詮釋有模糊空間。AI 永遠有腦補空間，只要不是 100%，就不是全自動化軟體工程。
+埋藏的 20% 錯誤，要花大量時間 review，根本無法提高效率。
+痛點與信任問題
+
+code review 很花時間，因為我們無法相信 AI 產生的 code
+
+用 TDD 驗證 AI 的程式碼
+
+
+就算有 TDD，AI 為了通過測試，會竄改測試程式碼
+
+我們還是無法相信 AI
+It can happen, It happened.
+
+
+
+核心結論
+
+我們和 AI 沒有共識。就算有 spec → 測試。
+和 AI 建立共識的「單位」，就是全自動化開發的「單位」。
+儘可能消除 AI 的發揮空間。工程是 100% 正確、毫無彈性的。
+越需要 AI 發揮空間，代表越不解軟體開發工程。
+
+
+二、開發流程的演進與核心思維
+開發典範的轉移
+
+從組語 → 高階語言 → 自然語言
+從在程式碼中工作 → 在規格上工作
+
+Discovery &gt; Formulation &gt; Automation
+
+discovery &gt; &ldquo;formulation&rdquo; &gt; automation
+QA、QE 的能力越來越重要，過去是程式碼上很亂，現在是亂在 formulation。
+亂的地方就是機會，有能力寫清楚 formulation 價值是百倍，有規格化能力的人就是 TOP 1%。
+
+可執行規格 vs 不可執行規格
+
+可執行規格： 可自動化測試、有綁定對應的測試。
+不可執行規格： 只是筆記。
+原則： 有錯是先改（補）規格，不是下 prompt 改 code。
+
+
+三、BDD 開發流程與實踐
+原子化流程
+
+BDD 開發流程原子化。
+每一步切到最小，每一步做到最好。
+如果結果不夠好，就回到第一步。
+
+實作所需與技巧
+
+後端要求
+
+可執行規格
+API 文件
+ERD 規劃好要持久化的資料
+
+
+小技巧
+
+要 debug、實作程式的，需要 thinking mode (比如 verify-scenario-test-fail 可能有環境問題)
+reuse 測試情境。
+
+
+
+工具與自動化串接
+
+用 python 取代 one-bdd-cycle.mdc 的虛擬碼，串接 claude code SDK。
+怕程式碼品質不好，最後再加一個 AI 做 code review。
+code review 可以用便宜的模型來省 token，比如 gpt-4o。
+
+
+五、Q&amp;A
+QA 1：關於職涯發展與導入方法
+**如果要落地方法，提升職涯發展。在公司還不了解，可執行規格能在 formulation → automation，提高效率的話，會建議怎麼做？ **">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/posts/wsa-ai-bdd-note/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.min.0ae5145492ee91fac5036e87965b1395678c6daee907d175e51d2af65e49fe1b.css" integrity="sha256-CuUUVJLukfrFA26HllsTlWeMba7pB9F15R0q9l5J/hs=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.min.555af97124d54bb1457985dd081b8f5616a48103aafeb30ac89fde835d65aa6c.js" integrity="sha256-VVr5cSTVS7FFeYXdCBuPVhakgQOq/rMKyJ/eg11lqmw="
+    onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/wsa-ai-bdd-note/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --hljs-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+	<ul id="menu">
+            <li>
+                <a href="http://localhost:1313/categories/" title="Categories">
+                    <span>Categories</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/tags/" title="Tags">
+                    <span>Tags</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/archives/" title="Archives">
+                    <span>Archives</span>
+                </a>
+            </li>
+        </ul>
+        <div class="logo">
+            <div class="social-icons">
+    <a href="https://github.com/r3nyou" target="_blank" rel="noopener noreferrer me" title="Github">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path
+        d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+    </path>
+</svg>
+    </a>
+    <a href="mailto:renyou815@gmail.com" target="_blank" rel="noopener noreferrer me" title="Email">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 21" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+    <polyline points="22,6 12,13 2,6"></polyline>
+</svg>
+    </a>
+</div>
+
+        </div>
+    </nav>
+    <article class="first-entry home-info">
+        <header class="entry-header">
+            <h1>Not a Real Programmer</h1>
+        </header>
+        <div class="entry-content">
+            <p>Hi, I&rsquo;m Marcus, and I&rsquo;m a mediocre programmer.</p>
+        </div>
+        <footer class="entry-footer">
+            
+        </footer>
+    </article></header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title">
+      水球軟體學院 「用 BDD 實現百倍效率的 Vibe Coding」心得
+    </h1>
+    <div class="post-meta">&lt;span title=&#39;2025-07-27 21:28:36 &#43;0800 CST&#39;&gt;July 27, 2025&lt;/span&gt;
+
+</div>
+  </header> 
+  <div class="post-content"><p>這篇文章記錄了我參加了水球軟體學院的 workshop「用 BDD 實現百倍效率的 Vibe Coding」的心得。</p>
+<p><a href="https://waterballsa.tw/design-pattern/">https://waterballsa.tw/design-pattern/</a></p>
+<p>課程當天蠻輕鬆的，一直指揮 AI 寫程式 XD，但收穫卻很豐富。因為水球潘示範的很清楚，一開始先示範大部分人（包括我 XD）現在是怎麼跟 AI 協作的，基本上就是：下 prompt → 等 AI 寫完程式 → 花很多時間 review。運氣好的話不用改，但大部分還是需要改。</p>
+<p>改程式碼有二種選擇：</p>
+<ol>
+<li>手動改。會讓開發體驗很差，必須人肉找出那 5~10% 的小錯誤，通常都蠻隱晦，而且因為不是自己寫的，所以特別難找。</li>
+<li>下 prompt 叫 AI 重寫 → 重複試幾次發現還是有錯，只好將就選一版稍微好的，然後還是要手動改。</li>
+</ol>
+<p>當天上課就是循序漸進示範，如何能做到 95% 正確率，而且如果要做到更高正確率，也有說明可能的做法了。</p>
+<p>其實我當工程師也 6 年了，有時候會覺得上班到有點麻木。但在 AI 出現後，而且上完課得到一個超酷的方法論，我又燃起熱血的心，覺得很新鮮很有趣，覺得躍躍欲試～</p>
+<p>以下是筆記</p>
+<h2 id="一軟體工程的本質與-ai-的挑戰">一、軟體工程的本質與 AI 的挑戰<a hidden class="anchor" aria-hidden="true" href="#一軟體工程的本質與-ai-的挑戰">#</a></h2>
+<p>軟體工程的本質問題，就是功能需求的詮釋有模糊空間。AI 永遠有腦補空間，只要不是 100%，就不是全自動化軟體工程。</p>
+<p>埋藏的 20% 錯誤，要花大量時間 review，根本無法提高效率。</p>
+<h3 id="痛點與信任問題">痛點與信任問題<a hidden class="anchor" aria-hidden="true" href="#痛點與信任問題">#</a></h3>
+<ul>
+<li>code review 很花時間，因為我們無法相信 AI 產生的 code
+<ul>
+<li>用 TDD 驗證 AI 的程式碼</li>
+</ul>
+</li>
+<li>就算有 TDD，AI 為了通過測試，會竄改測試程式碼
+<ul>
+<li>我們還是無法相信 AI</li>
+<li>It can happen, It happened.</li>
+</ul>
+</li>
+</ul>
+<h3 id="核心結論">核心結論<a hidden class="anchor" aria-hidden="true" href="#核心結論">#</a></h3>
+<ul>
+<li>我們和 AI 沒有共識。就算有 spec → 測試。</li>
+<li>和 AI 建立共識的「單位」，就是全自動化開發的「單位」。</li>
+<li>儘可能消除 AI 的發揮空間。工程是 100% 正確、毫無彈性的。</li>
+<li>越需要 AI 發揮空間，代表越不解軟體開發工程。</li>
+</ul>
+<hr>
+<h2 id="二開發流程的演進與核心思維">二、開發流程的演進與核心思維<a hidden class="anchor" aria-hidden="true" href="#二開發流程的演進與核心思維">#</a></h2>
+<h3 id="開發典範的轉移">開發典範的轉移<a hidden class="anchor" aria-hidden="true" href="#開發典範的轉移">#</a></h3>
+<ul>
+<li>從組語 → 高階語言 → 自然語言</li>
+<li>從在程式碼中工作 → 在規格上工作</li>
+</ul>
+<h3 id="discovery--formulation--automation">Discovery &gt; Formulation &gt; Automation<a hidden class="anchor" aria-hidden="true" href="#discovery--formulation--automation">#</a></h3>
+<ul>
+<li>discovery &gt; &ldquo;formulation&rdquo; &gt; automation</li>
+<li>QA、QE 的能力越來越重要，過去是程式碼上很亂，現在是亂在 formulation。</li>
+<li>亂的地方就是機會，有能力寫清楚 formulation 價值是百倍，有規格化能力的人就是 TOP 1%。</li>
+</ul>
+<h3 id="可執行規格-vs-不可執行規格">可執行規格 vs 不可執行規格<a hidden class="anchor" aria-hidden="true" href="#可執行規格-vs-不可執行規格">#</a></h3>
+<ul>
+<li><strong>可執行規格：</strong> 可自動化測試、有綁定對應的測試。</li>
+<li><strong>不可執行規格：</strong> 只是筆記。</li>
+<li><strong>原則：</strong> 有錯是先改（補）規格，不是下 prompt 改 code。</li>
+</ul>
+<hr>
+<h2 id="三bdd-開發流程與實踐">三、BDD 開發流程與實踐<a hidden class="anchor" aria-hidden="true" href="#三bdd-開發流程與實踐">#</a></h2>
+<h3 id="原子化流程">原子化流程<a hidden class="anchor" aria-hidden="true" href="#原子化流程">#</a></h3>
+<ul>
+<li>BDD 開發流程原子化。</li>
+<li>每一步切到最小，每一步做到最好。</li>
+<li>如果結果不夠好，就回到第一步。</li>
+</ul>
+<h3 id="實作所需與技巧">實作所需與技巧<a hidden class="anchor" aria-hidden="true" href="#實作所需與技巧">#</a></h3>
+<ul>
+<li><strong>後端要求</strong>
+<ul>
+<li>可執行規格</li>
+<li>API 文件</li>
+<li>ERD 規劃好要持久化的資料</li>
+</ul>
+</li>
+<li><strong>小技巧</strong>
+<ul>
+<li>要 debug、實作程式的，需要 thinking mode (比如 <code>verify-scenario-test-fail</code> 可能有環境問題)</li>
+<li>reuse 測試情境。</li>
+</ul>
+</li>
+</ul>
+<h3 id="工具與自動化串接">工具與自動化串接<a hidden class="anchor" aria-hidden="true" href="#工具與自動化串接">#</a></h3>
+<ul>
+<li>用 python 取代 <code>one-bdd-cycle.mdc</code> 的虛擬碼，串接 claude code SDK。</li>
+<li>怕程式碼品質不好，最後再加一個 AI 做 code review。</li>
+<li><strong>code review 可以用便宜的模型來省 token，比如 gpt-4o。</strong></li>
+</ul>
+<hr>
+<h2 id="五qa">五、Q&amp;A<a hidden class="anchor" aria-hidden="true" href="#五qa">#</a></h2>
+<h3 id="qa-1關於職涯發展與導入方法">QA 1：關於職涯發展與導入方法<a hidden class="anchor" aria-hidden="true" href="#qa-1關於職涯發展與導入方法">#</a></h3>
+<p>**如果要落地方法，提升職涯發展。在公司還不了解，可執行規格能在 <code>formulation → automation</code>，提高效率的話，會建議怎麼做？ **</p>
+<blockquote>
+<p>導入 AI 全自動化開發，很簡單，因為價值很明顯。</p>
+<p>敏捷 = 團隊共識</p>
+<p>= 人與 AI 的共識 = 自動化開發的準確力 = 快（這段是最重要的）</p>
+<p>第一版的 BDD 就可以 demo。</p>
+<p>全自動化版本的 demo 更猛。</p>
+<p>以前是寫完規格，請 RD 開發，現在是寫完可執行規格，叫 AI 開發。</p>
+<p>你找一個公司的 feature，demo <code>formulation → automation</code> 這段。</p>
+<p><strong>步驟：</strong></p>
+<ol>
+<li><code>one-bdd-cycle</code> 轉成 python，然後串 claude code SDK。</li>
+<li>找一個公司的 feature，寫可執行規格。</li>
+<li>測試 <code>formulation → automation</code> 這段，針對公司的專案做一些優化（AI 開發 SOP）。</li>
+</ol>
+<p>大家就會好奇這個魔法怎麼做到的。</p></blockquote>
+<h3 id="qa-2關於非功能性需求">QA 2：關於非功能性需求<a hidden class="anchor" aria-hidden="true" href="#qa-2關於非功能性需求">#</a></h3>
+<p><strong>BDD 是針對「功能」提出的規格。那「非功能性」需求，比如：效能、資安、美感怎麼辦？</strong></p>
+<ul>
+<li>非功能需求，一樣是去找「SOP」，找到 4S，寫可執行規格和 AI 建立共識，只是未必是 feature file 的格式而已。</li>
+<li>比如效能，你就思考 Jmeter 怎麼做效能測試，把它變成 SOP。叫 AI 用這個 jmeter 腳本（可執行規格）去驗證 response time、效能不到就 AI 自己修改程式碼，直到通過效能驗證。</li>
+<li>但你還是需要「技術選型」，這是人的價值（做決策＆當責）。</li>
+</ul>
+<h3 id="qa-3關於開發者角色的轉變">QA 3：關於開發者角色的轉變<a hidden class="anchor" aria-hidden="true" href="#qa-3關於開發者角色的轉變">#</a></h3>
+<p><strong>不寫 code 後，我要幹嘛？</strong></p>
+<blockquote>
+<p>做更有價值的事情</p></blockquote>
+<ul>
+<li>你的能力會左移，因為工程已經自動化了，你要去設計架構、做演算法，甚至關注受眾需求、知道如何銷售、商業模式、損益預估、市場趨勢&hellip;等。</li>
+</ul>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+<nav class="paginav">
+  <a class="next" href="http://localhost:1313/posts/91-unit-test-course/">
+    <span class="title">Next »</span>
+    <br>
+    <span>針對遺留代碼加入單元測試的藝術 上課心得</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2025 <a href="http://localhost:1313/"></a></span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

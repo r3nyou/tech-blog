@@ -1,0 +1,423 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Posts on </title>
+    <link>http://localhost:1313/posts/</link>
+    <description>Recent content in Posts on </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-tw</language>
+    <lastBuildDate>Sun, 27 Jul 2025 21:28:36 +0800</lastBuildDate><atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Wsa Ai Bdd Note</title>
+      <link>http://localhost:1313/posts/wsa-ai-bdd-note/</link>
+      <pubDate>Sun, 27 Jul 2025 21:28:36 +0800</pubDate>
+      
+      <guid>http://localhost:1313/posts/wsa-ai-bdd-note/</guid>
+      <description>&lt;p&gt;這篇文章記錄了我參加了水球軟體學院的 workshop「用 BDD 實現百倍效率的 Vibe Coding」的心得。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://waterballsa.tw/design-pattern/&#34;&gt;https://waterballsa.tw/design-pattern/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;課程當天蠻輕鬆的，一直指揮 AI 寫程式 XD，但收穫卻很豐富。因為水球潘示範的很清楚，一開始先示範大部分人（包括我 XD）現在是怎麼跟 AI 協作的，基本上就是：下 prompt → 等 AI 寫完程式 → 花很多時間 review。運氣好的話不用改，但大部分還是需要改。&lt;/p&gt;
+&lt;p&gt;改程式碼有二種選擇：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;手動改。會讓開發體驗很差，必須人肉找出那 5~10% 的小錯誤，通常都蠻隱晦，而且因為不是自己寫的，所以特別難找。&lt;/li&gt;
+&lt;li&gt;下 prompt 叫 AI 重寫 → 重複試幾次發現還是有錯，只好將就選一版稍微好的，然後還是要手動改。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;當天上課就是循序漸進示範，如何能做到 95% 正確率，而且如果要做到更高正確率，也有說明可能的做法了。&lt;/p&gt;
+&lt;p&gt;其實我當工程師也 6 年了，有時候會覺得上班到有點麻木。但在 AI 出現後，而且上完課得到一個超酷的方法論，我又燃起熱血的心，覺得很新鮮很有趣，覺得躍躍欲試～&lt;/p&gt;
+&lt;p&gt;下面就是筆記了。&lt;/p&gt;
+&lt;h2 id=&#34;一軟體工程的本質與-ai-的挑戰&#34;&gt;一、軟體工程的本質與 AI 的挑戰&lt;/h2&gt;
+&lt;p&gt;軟體工程的本質問題，就是功能需求的詮釋有模糊空間。AI 永遠有腦補空間，只要不是 100%，就不是全自動化軟體工程。&lt;/p&gt;
+&lt;p&gt;埋藏的 20% 錯誤，要花大量時間 review，根本無法提高效率。&lt;/p&gt;
+&lt;h3 id=&#34;痛點與信任問題&#34;&gt;痛點與信任問題&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;code review 很花時間，因為我們無法相信 AI 產生的 code
+&lt;ul&gt;
+&lt;li&gt;用 TDD 驗證 AI 的程式碼&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;就算有 TDD，AI 為了通過測試，會竄改測試程式碼
+&lt;ul&gt;
+&lt;li&gt;我們還是無法相信 AI&lt;/li&gt;
+&lt;li&gt;It can happen, It happened.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;核心結論&#34;&gt;核心結論&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;我們和 AI 沒有共識。就算有 spec → 測試。&lt;/li&gt;
+&lt;li&gt;和 AI 建立共識的「單位」，就是全自動化開發的「單位」。&lt;/li&gt;
+&lt;li&gt;儘可能消除 AI 的發揮空間。工程是 100% 正確、毫無彈性的。&lt;/li&gt;
+&lt;li&gt;越需要 AI 發揮空間，代表越不解軟體開發工程。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;二開發流程的演進與核心思維&#34;&gt;二、開發流程的演進與核心思維&lt;/h2&gt;
+&lt;h3 id=&#34;開發典範的轉移&#34;&gt;開發典範的轉移&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;從組語 → 高階語言 → 自然語言&lt;/li&gt;
+&lt;li&gt;從在程式碼中工作 → 在規格上工作&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;discovery--formulation--automation&#34;&gt;Discovery &amp;gt; Formulation &amp;gt; Automation&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;discovery &amp;gt; &amp;ldquo;formulation&amp;rdquo; &amp;gt; automation&lt;/li&gt;
+&lt;li&gt;QA、QE 的能力越來越重要，過去是程式碼上很亂，現在是亂在 formulation。&lt;/li&gt;
+&lt;li&gt;亂的地方就是機會，有能力寫清楚 formulation 價值是百倍，有規格化能力的人就是 TOP 1%。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;可執行規格-vs-不可執行規格&#34;&gt;可執行規格 vs 不可執行規格&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;可執行規格：&lt;/strong&gt; 可自動化測試、有綁定對應的測試。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;不可執行規格：&lt;/strong&gt; 只是筆記。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;原則：&lt;/strong&gt; 有錯是先改（補）規格，不是下 prompt 改 code。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;三bdd-開發流程與實踐&#34;&gt;三、BDD 開發流程與實踐&lt;/h2&gt;
+&lt;h3 id=&#34;原子化流程&#34;&gt;原子化流程&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;BDD 開發流程原子化。&lt;/li&gt;
+&lt;li&gt;每一步切到最小，每一步做到最好。&lt;/li&gt;
+&lt;li&gt;如果結果不夠好，就回到第一步。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;實作所需與技巧&#34;&gt;實作所需與技巧&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;後端要求&lt;/strong&gt;
+&lt;ul&gt;
+&lt;li&gt;可執行規格&lt;/li&gt;
+&lt;li&gt;API 文件&lt;/li&gt;
+&lt;li&gt;ERD 規劃好要持久化的資料&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;小技巧&lt;/strong&gt;
+&lt;ul&gt;
+&lt;li&gt;要 debug、實作程式的，需要 thinking mode (比如 &lt;code&gt;verify-scenario-test-fail&lt;/code&gt; 可能有環境問題)&lt;/li&gt;
+&lt;li&gt;reuse 測試情境。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;工具與自動化串接&#34;&gt;工具與自動化串接&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;用 python 取代 &lt;code&gt;one-bdd-cycle.mdc&lt;/code&gt; 的虛擬碼，串接 claude code SDK。&lt;/li&gt;
+&lt;li&gt;怕程式碼品質不好，最後再加一個 AI 做 code review。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;code review 可以用便宜的模型來省 token，比如 gpt-4o。&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;五qa&#34;&gt;五、Q&amp;amp;A&lt;/h2&gt;
+&lt;h3 id=&#34;qa-1關於職涯發展與導入方法&#34;&gt;QA 1：關於職涯發展與導入方法&lt;/h3&gt;
+&lt;p&gt;**如果要落地方法，提升職涯發展。在公司還不了解，可執行規格能在 &lt;code&gt;formulation → automation&lt;/code&gt;，提高效率的話，會建議怎麼做？ **&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>針對遺留代碼加入單元測試的藝術 上課心得</title>
+      <link>http://localhost:1313/posts/91-unit-test-course/</link>
+      <pubDate>Sun, 22 Jan 2023 16:24:56 +0800</pubDate>
+      
+      <guid>http://localhost:1313/posts/91-unit-test-course/</guid>
+      <description>&lt;p&gt;如果你在考慮要不要上 91 的&lt;a href=&#34;https://tdd.best/courses/unit-testing-gracefully-with-legacy-code-202301/&#34;&gt;針對遺留代碼加入單元測試的藝術&lt;/a&gt;，我建議趕快報名，因為我上完發現單元測試的手法/技巧都只是皮毛，真正重要的是單元測試的使用思維、其代價與限制、以及真正能提高產品的品質的單元測試是什麼樣子，這些全局宏觀的想法，看書或和同事討論單點的問題是解決不了的，有時候問題不是像打乒乓球一樣一來一往，而是需要更高的思維才能解決到真正核心問題，上完這門課才知道什麼是降維打擊，以及自己過去的理解有多單薄，各位可以試著回答以下問題並捫心自問是否有足夠的說服力，我的心得是上完課後，自己對這些問題的回答已經不是單純條理地回答，而是會很自然的認為/感覺答案本該如此，且我知道如何實際去做到。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;若專案僅包含一堆 CRUD 操作，這類專案的單元測試該從何下手？&lt;/li&gt;
+&lt;li&gt;Stored Procedure 怎麼測試？&lt;/li&gt;
+&lt;li&gt;單元測試後，通常會產出一些可觀測的測試報告，這些測試報告中哪些指標是有價值的? 哪些是可以忽略? 有沒有針對團隊組織的指標?&lt;/li&gt;
+&lt;li&gt;我想詢問關於既有專案添加測試。它可能已經迭代好幾輪的作者，內部的寫作風格各異，也沒有劃分清楚物件間的關係與職責，在這種情況下內部各種物件大量相依，如果不先進行結構性的重構，根本很難為其寫測試代碼，但是這也代表即將伴隨著極大的風險，面臨這樣的情況，會有更兩全其美的辦法嗎？&lt;/li&gt;
+&lt;li&gt;怎麼測試依賴很多的類別，看很多測試是貼著內部邏輯做測試，只要 production code 改動，測試也要跟著改，要維護二套程式碼好麻煩&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;記錄一下上完課程的心得&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;【Different】這次上課的內容，與你在實際的工作上，或是與其他課程你覺得最不一樣的地方有哪些？（試列出3~5點)&lt;/p&gt;&lt;/blockquote&gt;
+&lt;ol&gt;
+&lt;li&gt;之前認為單元測試是 production code 的輔助，只是驗證結果而已，但現在認為單元測試能驅動 production code 做出更好的設計&lt;/li&gt;
+&lt;li&gt;之前認為單元測試越詳盡、案例越多越好，現在知道測試程式碼也需要維護成本，辨認出需要測試的情境很重要&lt;/li&gt;
+&lt;li&gt;與其他課程差異在，91 教我的不只是單元測試本身的技術，而是讓我明白其代價與限制，什麼是低價值的單元測試，甚至不應該做單元測試，能清楚其代價與限制，才不會因為對這項技術的期望過高，效果卻不如預期，導致污名化、放棄單元測試&lt;/li&gt;
+&lt;/ol&gt;
+&lt;blockquote&gt;
+&lt;p&gt;【Learned】你覺得這門課裡印象最深刻、覺得最 surprise 的東西、覺得最實用的東西是哪些？（試列出3~5點)&lt;/p&gt;&lt;/blockquote&gt;
+&lt;ol&gt;
+&lt;li&gt;實例化需求&lt;/li&gt;
+&lt;li&gt;對 legacy code 做單元測試的方法&lt;/li&gt;
+&lt;li&gt;單元測試辨認出壞味道&lt;/li&gt;
+&lt;li&gt;單元測試結合重構的過程&lt;/li&gt;
+&lt;li&gt;只有在新需求或修正 bug 才寫單元測試，之前覺得很正常沒想太多，但今天突然發覺核心在於：只有新需求或修正 bug 才會有情境，沒有情境是寫不出有價值的單元測試的&lt;/li&gt;
+&lt;/ol&gt;
+&lt;blockquote&gt;
+&lt;p&gt;【Changing】再接下來7天內，在沒有其他人的協助、 支持之下，你打算在真實工作上運用上課學會的內容，做些什麼改變？（請列出一點就好，思考一下目標，重點是真的去執行，可能不會順利成功，會碰到挫折、問題，再帶著這些回來群組發問）&lt;/p&gt;&lt;/blockquote&gt;
+&lt;ol&gt;
+&lt;li&gt;開發新需求或修正 bug 時撰寫測試案例，並在過程中使用課程內教學的方式，讓既有程式裡針對我需要改動的地方，使其具有可測試性&lt;/li&gt;
+&lt;/ol&gt;
+&lt;blockquote&gt;
+&lt;p&gt;【感想、感受】可以寫下你上這門課的感受 (feeling)，也可以寫下因為這門課讓你產生了哪些與自己知識/技能體系的連結，也可以輕鬆地寫下你對這門課的感想&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;很開心自己有來上課，除了學習，也感受到 91 的熱情&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>請協助做好委派的工作</title>
+      <link>http://localhost:1313/posts/go-delegate/</link>
+      <pubDate>Sat, 02 Jul 2022 10:42:50 +0800</pubDate>
+      
+      <guid>http://localhost:1313/posts/go-delegate/</guid>
+      <description>&lt;p&gt;之前介紹過 Prototype-based programming，Golang 利用委派 delegate 也能做到。&lt;/p&gt;
+&lt;h2 id=&#34;委派的範例&#34;&gt;委派的範例&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Widget&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#a6e22e&#34;&gt;X&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;Y&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Label&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#a6e22e&#34;&gt;Widget&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#a6e22e&#34;&gt;Text&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#a6e22e&#34;&gt;X&lt;/span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;label&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Label&lt;/span&gt;) &lt;span style=&#34;color:#a6e22e&#34;&gt;Paint&lt;/span&gt;() {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#a6e22e&#34;&gt;fmt&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Printf&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;[%p] - Label.Paint(%q)\n&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;label&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;label&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Text&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;上面這段程式碼有幾個重點：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;定義了 struct，Widget&lt;/li&gt;
+&lt;li&gt;跟 C 語言一樣，把 struct 放到另一個 struct 中，定義了 Label，把 Widget 委派進去&lt;/li&gt;
+&lt;li&gt;Label 實作了 Paint() 方法&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;接著可以這樣使用：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;label&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Label&lt;/span&gt;{&lt;span style=&#34;color:#a6e22e&#34;&gt;Widget&lt;/span&gt;{&lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;}, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;State&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;100&lt;/span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;fmt&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Printf&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;X=%d, Y=%d, Text=%s, Widget.X=%d\n&amp;#34;&lt;/span&gt;,  &lt;span style=&#34;color:#75715e&#34;&gt;// X=100, Y=10, Text=State, Widget.X=10&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;		&lt;span style=&#34;color:#a6e22e&#34;&gt;label&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;X&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;label&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Y&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;label&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Text&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;		&lt;span style=&#34;color:#a6e22e&#34;&gt;label&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Widget&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;X&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;fmt&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Printf&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;%+v\n%v\n&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;label&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;label&lt;/span&gt;) &lt;span style=&#34;color:#75715e&#34;&gt;// {Widget:{X:10 Y:10} Text:State X:100}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	                                  &lt;span style=&#34;color:#75715e&#34;&gt;// {{10 10} State 100}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;label&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Paint&lt;/span&gt;() &lt;span style=&#34;color:#75715e&#34;&gt;// [0xc0000a81e0] - Label.Paint(&amp;#34;State&amp;#34;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;可以發現衝突的屬性名稱 X，需要手動處理。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Sorry，Prototype 真的可以為所欲為</title>
+      <link>http://localhost:1313/posts/prototype-based-programming/</link>
+      <pubDate>Wed, 15 Jun 2022 10:57:38 +0800</pubDate>
+      
+      <guid>http://localhost:1313/posts/prototype-based-programming/</guid>
+      <description>&lt;p&gt;之前在 &lt;a href=&#34;../object-oritend-programming&#34;&gt;物件導向的文章&lt;/a&gt; 中介紹了基於類別的物件導向設計，還有另一種特別的物件導向設計，被稱為原型程式設計 Prototype-based programming。沒有 class，直接使用物件，例如 JavaScript。&lt;/p&gt;
+&lt;p&gt;與傳統物件導向的差別在：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;傳統基於類別的程式中，類別定義物件的布局、函式；介面則是「能使用」的物件，是基於某些特定類別的樣式。這種設計中，類別是行為、結構的集合，而對介面而言，其所屬類別的行為、結構都是相同的。所以區分規則首先是行為、結構(類別)，然後才是狀態(物件實體)。&lt;/li&gt;
+&lt;li&gt;原型程式設計則認為不該先關注類別之間的關係，而是先關注一系列物件實體的行為，然後才將這些物件依照使用方式區分成相似的 prototype object，而不是分成類別。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;因此原型程式設計，鼓勵 runtime 進行原型修改：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;基於類別的語言裡，物件透過類別的建構子來實體化，物件實體是由類別設定的行為、布局建立&lt;/li&gt;
+&lt;li&gt;原型程式設計裡要實體化物件有二種方法，一透過複製其他物件，二是擴展空物件&lt;/li&gt;
+&lt;li&gt;基於類別的語言只有動態語言允許在 runtime 修改類別(PHP、Python、Ruby)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;javascript-的原型觀念&#34;&gt;JavaScript 的原型觀念&lt;/h2&gt;
+&lt;p&gt;透過 JavaScript 說明開頭的觀念。&lt;/p&gt;
+&lt;p&gt;通常物件導向裡都要有 class，但原型程式的 JavaScript 認為不需要 class，直接在物件上改就好了。&lt;/p&gt;
+&lt;p&gt;來看一個簡單範例：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;foo&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; {&lt;span style=&#34;color:#a6e22e&#34;&gt;name&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;foo&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;one&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;two&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;};
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;bar&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; {&lt;span style=&#34;color:#a6e22e&#34;&gt;three&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;};
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;每個物件都有一個原型屬性 __proto__。所以能把 foo 指派給 bar.__proto__，代表 bar 的原型是 foo。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;bar&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;__proto__&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;foo&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;然後，就可以在 bar 裡面取得 foo 的屬性。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;bar&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;one&lt;/span&gt;; &lt;span style=&#34;color:#75715e&#34;&gt;// resolves to 1
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;bar&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;three&lt;/span&gt;  &lt;span style=&#34;color:#75715e&#34;&gt;// resolves to 3
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// Own properties shadow prototype properties
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;bar&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;name&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;bar&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;foo&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;name&lt;/span&gt;; &lt;span style=&#34;color:#75715e&#34;&gt;// unaffected, resolves to &amp;#34;foo&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;這裡要先解釋一下 JavaScript 的二個概念， __proto__ 與 prototype，JavaScirpt 中物件有二種形式，一是 Object，二是 Function：&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>不好好地 Code Review 怎麼行</title>
+      <link>http://localhost:1313/posts/code-review/</link>
+      <pubDate>Fri, 03 Jun 2022 14:29:01 +0800</pubDate>
+      
+      <guid>http://localhost:1313/posts/code-review/</guid>
+      <description>&lt;p&gt;Code Review 的好處是沒有爭議的，關於如何 Code Review、與諸多好處，可以參考：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://blog.palantir.com/code-review-best-practices-19e02780015f&#34;&gt;Code Review Best Practices&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://dzone.com/articles/how-google-does-code-review&#34;&gt;How Google Does Code Review&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://thenewstack.io/linkedin-code-review/&#34;&gt;LinkedIn’s Tips for Highly Effective Code Review&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;但我發現有許多公司沒有 Code Reivew，所以蒐集了一些反對的原因：&lt;/p&gt;
+&lt;h2 id=&#34;不做-code-review-的原因&#34;&gt;不做 Code Review 的原因&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;1. 有 QA，不要有 Bug 就好，Code Review 沒太大意義&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;我想這是誤會，Code Review 並不負責找出程式碼的錯誤，這也是很多 Reviewer 的誤區，Code Review 應該把力氣放在程式碼的品質，例如可讀性、維護性、擴展性等，錯誤應該是由測試來處理的。&lt;/p&gt;
+&lt;p&gt;當然我不是說，不能在 Code Review 去檢查出 Bug，只是那並非 Code Review 主要目的。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;2. 需求變化太快，專案的生命週期短，寫好程式沒有意義，反正過沒多久就拋棄了&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;如果是一次性的東西、短期的解決方案，的確不需要太高品質的程式碼，反正用沒多久就要丟了，但至少要 Review 一下這個短期的程式碼有沒有影響到長期程式碼吧? 如果整個專案全都是臨時的程式，那要思考一下自己的部門是否也是一個臨時部門?&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;3. 時間太緊急，連 coding 都來不及，哪有時間 Code Reivew&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;時間緊急、需求變化太快，其實與 Code Reivew 無關，而是管理的問題，這些問題也不該成為反對 Code Review 的理由；有些人能看到背後價值，堅持做對的事情，有些人因噎廢食，而人與人的不同就在此。&lt;/p&gt;
+&lt;h2 id=&#34;code-review-做不起來&#34;&gt;Code Review 做不起來&lt;/h2&gt;
+&lt;p&gt;大家都知道 Code Review 的好，但以下情況會造成 Code Review 沒效果：&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>光看標題是學不會物件導向的</title>
+      <link>http://localhost:1313/posts/object-oritend-programming/</link>
+      <pubDate>Fri, 27 May 2022 10:20:05 +0800</pubDate>
+      
+      <guid>http://localhost:1313/posts/object-oritend-programming/</guid>
+      <description>&lt;p&gt;既然點進來看內文了，這篇文章是介紹物件導向程式設計方法。&lt;/p&gt;
+&lt;p&gt;之前在 &lt;a href=&#34;../functional-programming&#34;&gt;Functional programming 的文章&lt;/a&gt;介紹過，Functional programming 是透過組合各種函式來完成功能，函式是計算過程的抽象，但程式碼除了計算過程以外，還需要處理資料，也就是所謂的「狀態」，關於狀態的處理，就需要提到物件導向程式設計 (Object-oriented programming)。&lt;/p&gt;
+&lt;p&gt;所謂物件指的是類別的實體，把物件當成程式的基本單位，並將資料封裝在其中，程式會被設計成一個個獨立的物件，每個物件都要能接受資料、處理資料、傳資料給其他物件，好比一個個小型的機器一樣，各自獨立，且彼此互相關聯。這與傳統的程式設計方法不同，傳統的想法是把程式設計成一系列對機器的指令、或者一系列函式的集合。&lt;/p&gt;
+&lt;p&gt;目前物件導向被廣泛使用在大型專案中，優點是靈活性、可維護性；另外有部分人認為物件導向更容易分析、理解程式。&lt;/p&gt;
+&lt;p&gt;物件導向領域有一本經典書籍，&lt;a href=&#34;https://www.amazon.com/Design-Patterns-Object-Oriented-Addison-Wesley-Professional-ebook/dp/B000SEIBB8&#34;&gt;Design Pattern&lt;/a&gt;，這本書介紹了 23 個設計模式，說的是二個觀念：&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Program to an interface, not an implementation.&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;呼叫者不需要知道資料型別、資料結構、算法的細節&lt;/li&gt;
+&lt;li&gt;呼叫者不需要知道實作細節，只要知道提供什麼介面&lt;/li&gt;
+&lt;li&gt;方便封裝、抽象、多型、動態綁定&lt;/li&gt;
+&lt;li&gt;符合物件(導向)的特質&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Favor object composition over class inheritance.&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;繼承需要暴露父類別的設計、實作給子類別&lt;/li&gt;
+&lt;li&gt;父類別改變會造成子類別也要改變&lt;/li&gt;
+&lt;li&gt;很多人有誤區，認為繼承是為了程式碼重用，實際上子類別仍需要重新實作很多父類別的方法，其實繼承更多是為了多型&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;範例一-組合物件&#34;&gt;範例一 組合物件&lt;/h2&gt;
+&lt;p&gt;假設一個家具的系統，需求如下：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;四個物體：塑膠桌、塑膠椅、木頭桌、木頭椅&lt;/li&gt;
+&lt;li&gt;四種屬性：價格、重量、密度、燃點&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;物件導向設計為下圖：
+&lt;img loading=&#34;lazy&#34; src=&#34;http://localhost:1313/img/object-oritend-programming/object-composition-uml.png&#34; alt=&#34;object composition uml&#34;  /&gt;
+&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;材質類別 Material，有密度、燃點屬性&lt;/li&gt;
+&lt;li&gt;家具類別 Furniture，有價格、體積屬性&lt;/li&gt;
+&lt;li&gt;Furniture 耦合了 Material，具體是木製、塑膠製，在建立家具物件時注入材質物件即可&lt;/li&gt;
+&lt;li&gt;家具類能用自己的體積，與材質物件的密度，計算出重量&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;這樣設計的優點是&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;好理解，與現實世界對應&lt;/li&gt;
+&lt;li&gt;材質類別可重複使用，前面有提到物件導向喜歡組合，而非繼承&lt;/li&gt;
+&lt;li&gt;這個設計方式叫 Bridge pattern&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Functional programming 強調動詞，而 Object-oriented programming 強調名詞，關注介面之間的關係，利用多型來達成不同的具體實作。&lt;/p&gt;
+&lt;h2 id=&#34;範例二-組合功能&#34;&gt;範例二 組合功能&lt;/h2&gt;
+&lt;p&gt;來看另一個例子，有個電商系統要處理不同折扣的訂單，有的原價、有的要打折。&lt;/p&gt;
+&lt;p&gt;以 Java 為例，先寫一個介面，輸入原始價格，返回根據不同方式的折扣價。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;interface&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;BillingStrategy&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;double&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;getActPrice&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;double&lt;/span&gt; rawPrice);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;然後實作 BillingStrategy 介面&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>寫日誌這種事，不管到幾歲都討厭</title>
+      <link>http://localhost:1313/posts/work-diary/</link>
+      <pubDate>Mon, 16 May 2022 21:33:26 +0800</pubDate>
+      
+      <guid>http://localhost:1313/posts/work-diary/</guid>
+      <description>&lt;blockquote&gt;
+&lt;p&gt;這篇文是紀念來二天就離職的同事&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;新同事來二天就離職，說每天晨會要報告工作進度、寫工作日誌，壓力太大。&lt;/p&gt;
+&lt;p&gt;雖然我也很討厭寫日誌，從小就不愛簽聯絡簿，但工作日誌實屬必要，我還是堅持每天寫。這是我某二天的工作日誌：&lt;/p&gt;
+&lt;p&gt;2021-04-15&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;頭痛，不想工作&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;2021-04-16&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;完成了依據 sku 統計 GA event，並且合併 term 的功能&lt;/li&gt;
+&lt;li&gt;makeTagReport 改成產生二個 mongoDB collection（document term map skus &amp;amp; sku performance），過程需要用 go 執行另一個 command，發現使用 command 帶參數的問題，&lt;code&gt; out, err := exec.Command(&amp;quot;./cobraCommand type --file=test.csv&amp;quot;).Output()&lt;/code&gt; 出現錯誤訊息 fork exec no such file or directory，後來看&lt;a href=&#34;https://pkg.go.dev/os/exec#Command&#34;&gt;文件&lt;/a&gt;裡有關於參數的說明: If name contains no path separators, Command uses LookPath to resolve name to a complete path if possible. Otherwise it uses name directly as Path. 原來 Command 的 name 參數無法寫整條命令，因為會被當成路徑，所以參數只能在後面帶入，例如 &lt;code&gt;out, err := exec.Command(“./ga-report”, “makeTagReport”, “--file=test.csv”).Output()&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;我對工作日誌的要求是&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Functional programming 到底是什麼鬼</title>
+      <link>http://localhost:1313/posts/functional-programming/</link>
+      <pubDate>Sun, 15 May 2022 21:21:19 +0800</pubDate>
+      
+      <guid>http://localhost:1313/posts/functional-programming/</guid>
+      <description>&lt;p&gt;在&lt;a href=&#34;../generic-programming&#34;&gt;這次是對泛型 Generic programming 的思考&lt;/a&gt;文中，講了泛型的本質就是對型別的抽象，這篇文將介紹更抽象的程式設計方法，函式語言程式設計(Functional programming) 到底是甚麼鬼。&lt;/p&gt;
+&lt;h2 id=&#34;函式語言程式設計&#34;&gt;函式語言程式設計&lt;/h2&gt;
+&lt;p&gt;Functional programming 的理念來自數學的代數。&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;f(x)=3x^2+x+1
+g(x)=2f(x)+4=6x^2+2x+6
+h(x)=f(x)+g(x)=9x^2+3x+7
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;f(x) 是函式，g(x) 是把 f(x) 帶入並展開，h(x) 則是二個函式組成的二元函式。&lt;/p&gt;
+&lt;p&gt;函式還能做遞迴，例如費式數列&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;f(x)=f(x-1)+f(x-2)
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Functional programming 就像數學表達式，定義輸入資料和輸出資料的關係，是一種 mapping 的概念。&lt;/p&gt;
+&lt;p&gt;Functional programming 的特點:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;stateless: 無狀態，重複執行的話，函式內部的資料是不變的&lt;/li&gt;
+&lt;li&gt;immutable: 不改動輸入資料，每次都返回新的資料&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;優點&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;沒有狀態，所以可以瘋狂並行(Parallelism)&lt;/li&gt;
+&lt;li&gt;寫程式可以複製貼上，無狀態，不用擔心全域變數&lt;/li&gt;
+&lt;li&gt;惰性求值&lt;/li&gt;
+&lt;li&gt;確定性 f(x)=y 永遠都有同樣的結果&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;缺點&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;大量複製資料&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;functional-programming-的技巧&#34;&gt;Functional programming 的技巧&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;first class function: 函數可以當變數用，可以傳遞、返回、嵌套&lt;/li&gt;
+&lt;li&gt;recursive: 簡化程式碼，把複查的問題，能夠簡單的描述&lt;/li&gt;
+&lt;li&gt;tail recursion: 避免 function stack 過多，需要編譯器有支援&lt;/li&gt;
+&lt;li&gt;map、reduce&lt;/li&gt;
+&lt;li&gt;pipeline: 把函式放到一個陣列、list 中，資料會依照順序被各個函式操作，最終得到結果&lt;/li&gt;
+&lt;li&gt;high order function: 把函式當參數，把傳入的函式做封裝，然後返回封裝後的函式&lt;/li&gt;
+&lt;li&gt;currying: 簡化函式參數，把函式多個參數分解成多個函式封裝，每層函式都返回一個函式去接收下一個參數&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;舉個例子說明 stateless，下面的程式是有狀態的，因為是對全域變數做 ++，多執行緒是不安全的。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; cnt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;increment&lt;/span&gt;() {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	cnt&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;改成用參數傳遞，並行執行不需要鎖&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>這次是對 Generic programming 的思考</title>
+      <link>http://localhost:1313/posts/generic-programming/</link>
+      <pubDate>Sun, 01 May 2022 20:46:22 +0800</pubDate>
+      
+      <guid>http://localhost:1313/posts/generic-programming/</guid>
+      <description>&lt;p&gt;程式寫了幾年後，有了些感性認識，無論是想寫的更好，或想學其他語言但覺得太多種學不完、也不知道怎麼學，只學了表面。&lt;/p&gt;
+&lt;p&gt;如果你也有一樣的疑問，不妨瞭解下 Programming Paradigm 程式設計方法，透過程式語言的發展歷史，瞭解主流的幾種程式語言的特性，在比較與歸納中去思考程式設計的本質為何？從更高的維度去思考，就能提高程式設計能力。&lt;/p&gt;
+&lt;p&gt;Programming Paradigm 將程式語言分成不同的設計風格，這系列文章會透過幾種語言(C、C++、Java、Go、Python、JavaScript)來了解「如何寫出更通用、可重用的程式」。&lt;/p&gt;
+&lt;p&gt;這次是對泛型 Generic programming 的思考。&lt;/p&gt;
+&lt;h2 id=&#34;c-語言&#34;&gt;C 語言&lt;/h2&gt;
+&lt;p&gt;許多人第一個學習的是 C 語言，能做到微觀非常精細的操作，讓工程師自由控制底層、系統的細節，但在程式碼的組織、功能上有許多缺點，因此現在有許多 C Like 語言都是以 C 語言為基礎拓展，並改善 C 語言的問題。&lt;/p&gt;
+&lt;p&gt;C 語言的特性&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;靜態弱型別：使用變數需要定義資料型別，但類型之間會自動轉型。&lt;/li&gt;
+&lt;li&gt;不同變數可以用 struct 組合成新的資料型別。&lt;/li&gt;
+&lt;li&gt;可以用 typedef 關鍵字定義資料型別的別名，達到變數資料型別的抽象。&lt;/li&gt;
+&lt;li&gt;有變數的作用域、遞迴功能。&lt;/li&gt;
+&lt;li&gt;參數以值傳遞，也可以傳指標。&lt;/li&gt;
+&lt;li&gt;透過指標能對記憶體做底層控制，但也增加了寫作的複雜度。&lt;/li&gt;
+&lt;li&gt;編譯預處理可以讓編譯更有彈性，做跨平台。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;c-語言的-swap&#34;&gt;C 語言的 swap&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;swap&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; x, &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; y) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; tmp &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;x;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;x &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;y;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;y &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; tmp;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;這段程式重點有二個&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;傳指標是因為函式的參數 x、y 只是引數的 copy，函式內修改參數無法影響外部的引數。&lt;/li&gt;
+&lt;li&gt;問題在於這函式只適用於 int，double、float 都不能用，這是靜態類型語言面臨的問題。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;資料型別&#34;&gt;資料型別&lt;/h2&gt;
+&lt;p&gt;透過 swap() 能發現，靜態類型的語言要做到泛型，首先要處理的是資料型別的問題&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;泛型程式設計，對於靜態類性語言首先要做的就是抽象資料型別。&lt;/li&gt;
+&lt;li&gt;C 語言的編譯器會做自動轉型，讓寫程式方便一點，也可以做到一點點的泛型。&lt;/li&gt;
+&lt;li&gt;C 語言做轉型，可能出現問題；例如一個 double 類型陣列，a[2] 尋址公式為 a + sizeof(double) * 2，如果轉成 int 陣列，尋址公式變成 a + sizeof(int) * 2，於是訪問到不同記憶體位址而出現錯誤。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;c-語言的泛型&#34;&gt;C 語言的泛型&lt;/h2&gt;
+&lt;p&gt;要讓 swap() 能通用各種型別，C 語言可以透過 void* 做到泛型&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<meta name="robots" content="noindex, nofollow">
+<title>請協助做好委派的工作 | </title>
+<meta name="keywords" content="程式設計">
+<meta name="description" content="之前介紹過 Prototype-based programming，Golang 利用委派 delegate 也能做到。
+委派的範例
+type Widget struct {
+	X, Y int
+}
+
+type Label struct {
+	Widget
+	Text string
+	X    int
+}
+
+func (label Label) Paint() {
+	fmt.Printf(&#34;[%p] - Label.Paint(%q)\n&#34;, &amp;label, label.Text)
+}
+上面這段程式碼有幾個重點：
+
+定義了 struct，Widget
+跟 C 語言一樣，把 struct 放到另一個 struct 中，定義了 Label，把 Widget 委派進去
+Label 實作了 Paint() 方法
+
+接著可以這樣使用：
+label := Label{Widget{10, 10}, &#34;State&#34;, 100}
+
+fmt.Printf(&#34;X=%d, Y=%d, Text=%s, Widget.X=%d\n&#34;,  // X=100, Y=10, Text=State, Widget.X=10
+		label.X, label.Y, label.Text,
+		label.Widget.X)
+
+fmt.Printf(&#34;%&#43;v\n%v\n&#34;, label, label) // {Widget:{X:10 Y:10} Text:State X:100}
+	                                  // {{10 10} State 100}
+
+label.Paint() // [0xc0000a81e0] - Label.Paint(&#34;State&#34;)
+可以發現衝突的屬性名稱 X，需要手動處理。">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/posts/go-delegate/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.min.0ae5145492ee91fac5036e87965b1395678c6daee907d175e51d2af65e49fe1b.css" integrity="sha256-CuUUVJLukfrFA26HllsTlWeMba7pB9F15R0q9l5J/hs=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.min.555af97124d54bb1457985dd081b8f5616a48103aafeb30ac89fde835d65aa6c.js" integrity="sha256-VVr5cSTVS7FFeYXdCBuPVhakgQOq/rMKyJ/eg11lqmw="
+    onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/go-delegate/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --hljs-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+	<ul id="menu">
+            <li>
+                <a href="http://localhost:1313/categories/" title="Categories">
+                    <span>Categories</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/tags/" title="Tags">
+                    <span>Tags</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/archives/" title="Archives">
+                    <span>Archives</span>
+                </a>
+            </li>
+        </ul>
+        <div class="logo">
+            <div class="social-icons">
+    <a href="https://github.com/r3nyou" target="_blank" rel="noopener noreferrer me" title="Github">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path
+        d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+    </path>
+</svg>
+    </a>
+    <a href="mailto:renyou815@gmail.com" target="_blank" rel="noopener noreferrer me" title="Email">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 21" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+    <polyline points="22,6 12,13 2,6"></polyline>
+</svg>
+    </a>
+</div>
+
+        </div>
+    </nav>
+    <article class="first-entry home-info">
+        <header class="entry-header">
+            <h1>Not a Real Programmer</h1>
+        </header>
+        <div class="entry-content">
+            <p>Hi, I&rsquo;m Marcus, and I&rsquo;m a mediocre programmer.</p>
+        </div>
+        <footer class="entry-footer">
+            
+        </footer>
+    </article></header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title">
+      請協助做好委派的工作
+    </h1>
+    <div class="post-meta">&lt;span title=&#39;2022-07-02 10:42:50 &#43;0800 CST&#39;&gt;July 2, 2022&lt;/span&gt;
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#%e5%a7%94%e6%b4%be%e7%9a%84%e7%af%84%e4%be%8b" aria-label="委派的範例">委派的範例</a></li>
+                <li>
+                    <a href="#%e9%87%8d%e6%a7%8b%e5%a7%94%e6%b4%be%e7%9a%84%e7%af%84%e4%be%8b" aria-label="重構委派的範例">重構委派的範例</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><p>之前介紹過 Prototype-based programming，Golang 利用委派 delegate 也能做到。</p>
+<h2 id="委派的範例">委派的範例<a hidden class="anchor" aria-hidden="true" href="#委派的範例">#</a></h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Widget</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">X</span>, <span style="color:#a6e22e">Y</span> <span style="color:#66d9ef">int</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Label</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">Widget</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">Text</span> <span style="color:#66d9ef">string</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">X</span>    <span style="color:#66d9ef">int</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">label</span> <span style="color:#a6e22e">Label</span>) <span style="color:#a6e22e">Paint</span>() {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;[%p] - Label.Paint(%q)\n&#34;</span>, <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">label</span>, <span style="color:#a6e22e">label</span>.<span style="color:#a6e22e">Text</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>上面這段程式碼有幾個重點：</p>
+<ul>
+<li>定義了 struct，Widget</li>
+<li>跟 C 語言一樣，把 struct 放到另一個 struct 中，定義了 Label，把 Widget 委派進去</li>
+<li>Label 實作了 Paint() 方法</li>
+</ul>
+<p>接著可以這樣使用：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">label</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">Label</span>{<span style="color:#a6e22e">Widget</span>{<span style="color:#ae81ff">10</span>, <span style="color:#ae81ff">10</span>}, <span style="color:#e6db74">&#34;State&#34;</span>, <span style="color:#ae81ff">100</span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;X=%d, Y=%d, Text=%s, Widget.X=%d\n&#34;</span>,  <span style="color:#75715e">// X=100, Y=10, Text=State, Widget.X=10</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">label</span>.<span style="color:#a6e22e">X</span>, <span style="color:#a6e22e">label</span>.<span style="color:#a6e22e">Y</span>, <span style="color:#a6e22e">label</span>.<span style="color:#a6e22e">Text</span>,
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">label</span>.<span style="color:#a6e22e">Widget</span>.<span style="color:#a6e22e">X</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;%+v\n%v\n&#34;</span>, <span style="color:#a6e22e">label</span>, <span style="color:#a6e22e">label</span>) <span style="color:#75715e">// {Widget:{X:10 Y:10} Text:State X:100}</span>
+</span></span><span style="display:flex;"><span>	                                  <span style="color:#75715e">// {{10 10} State 100}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">label</span>.<span style="color:#a6e22e">Paint</span>() <span style="color:#75715e">// [0xc0000a81e0] - Label.Paint(&#34;State&#34;)</span>
+</span></span></code></pre></div><p>可以發現衝突的屬性名稱 X，需要手動處理。</p>
+<p>再來繼續擴充程式，新增一個 Button：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Button</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">Label</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">NewButton</span>(<span style="color:#a6e22e">x</span>, <span style="color:#a6e22e">y</span> <span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">text</span> <span style="color:#66d9ef">string</span>) <span style="color:#a6e22e">Button</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">Button</span>{<span style="color:#a6e22e">Label</span>{<span style="color:#a6e22e">Widget</span>{<span style="color:#a6e22e">x</span>, <span style="color:#a6e22e">y</span>}, <span style="color:#a6e22e">text</span>, <span style="color:#a6e22e">x</span>}}
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// override</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">button</span> <span style="color:#a6e22e">Button</span>) <span style="color:#a6e22e">Paint</span>() {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;[%p] - Button.Paint(%q)\n&#34;</span>,
+</span></span><span style="display:flex;"><span>		<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">button</span>, <span style="color:#a6e22e">button</span>.<span style="color:#a6e22e">Text</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">button</span> <span style="color:#a6e22e">Button</span>) <span style="color:#a6e22e">Click</span>() {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;[%p] - Button.Click()\n&#34;</span>, <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">button</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>再新增一個 ListBox：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">ListBox</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">Widget</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">Texts</span> []<span style="color:#66d9ef">string</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">Index</span> <span style="color:#66d9ef">int</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">listBox</span> <span style="color:#a6e22e">ListBox</span>) <span style="color:#a6e22e">Paint</span>() {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;[%p] - ListBox.Paint(%q)\n&#34;</span>,
+</span></span><span style="display:flex;"><span>		<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">listBox</span>, <span style="color:#a6e22e">listBox</span>.<span style="color:#a6e22e">Texts</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">listBox</span> <span style="color:#a6e22e">ListBox</span>) <span style="color:#a6e22e">Click</span>() {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;[%p] - ListBox.Click()\n&#34;</span>, <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">listBox</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>然後定義二個介面，用來多型：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Painter</span> <span style="color:#66d9ef">interface</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">Paint</span>()
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Clicker</span> <span style="color:#66d9ef">interface</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">Click</span>()
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>接著就能泛型的使用：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">label</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">Label</span>{<span style="color:#a6e22e">Widget</span>{<span style="color:#ae81ff">10</span>, <span style="color:#ae81ff">10</span>}, <span style="color:#e6db74">&#34;State&#34;</span>, <span style="color:#ae81ff">100</span>}
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">button1</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">Button</span>{<span style="color:#a6e22e">Label</span>{<span style="color:#a6e22e">Widget</span>{<span style="color:#ae81ff">10</span>, <span style="color:#ae81ff">20</span>}, <span style="color:#e6db74">&#34;OK&#34;</span>, <span style="color:#ae81ff">10</span>}}
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">button2</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">NewButton</span>(<span style="color:#ae81ff">20</span>, <span style="color:#ae81ff">40</span>, <span style="color:#e6db74">&#34;Exit&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">listBox</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">ListBox</span>{<span style="color:#a6e22e">Widget</span>{<span style="color:#ae81ff">10</span>, <span style="color:#ae81ff">20</span>},
+</span></span><span style="display:flex;"><span>[]<span style="color:#66d9ef">string</span>{<span style="color:#e6db74">&#34;AA&#34;</span>, <span style="color:#e6db74">&#34;BB&#34;</span>, <span style="color:#e6db74">&#34;CC&#34;</span>, <span style="color:#e6db74">&#34;DD&#34;</span>}, <span style="color:#ae81ff">0</span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// [0xc000012270] - Label.Paint(&#34;State&#34;)</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// [0xc0000122a0] - Button.Paint(&#34;OK&#34;)</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// [0xc0000122d0] - Button.Paint(&#34;Exit&#34;)</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// [0xc000012300] - ListBox.Paint([&#34;AA&#34; &#34;BB&#34; &#34;CC&#34; &#34;DD&#34;])</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">painter</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> []<span style="color:#a6e22e">Painter</span>{<span style="color:#a6e22e">label</span>, <span style="color:#a6e22e">button1</span>, <span style="color:#a6e22e">button2</span>, <span style="color:#a6e22e">listBox</span>} {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">painter</span>.<span style="color:#a6e22e">Paint</span>()
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// [0xc0000123f0] - Button.Click()</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// [0xc000012420] - Button.Click()</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// [0xc000012450] - ListBox.Click()</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">widget</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> []<span style="color:#a6e22e">Painter</span>{<span style="color:#a6e22e">label</span>, <span style="color:#a6e22e">button1</span>, <span style="color:#a6e22e">button2</span>, <span style="color:#a6e22e">listBox</span>} {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">clicker</span>, <span style="color:#a6e22e">ok</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">widget</span>.(<span style="color:#a6e22e">Clicker</span>); <span style="color:#a6e22e">ok</span> {
+</span></span><span style="display:flex;"><span>	    <span style="color:#a6e22e">clicker</span>.<span style="color:#a6e22e">Click</span>()
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>以上就是 Go 中的委派與介面多型的寫法，並融合了原型設計。</p>
+<h2 id="重構委派的範例">重構委派的範例<a hidden class="anchor" aria-hidden="true" href="#重構委派的範例">#</a></h2>
+<p>先來看一個資料容器的範例，其中有 Add()、Delete()、Contains()、轉字串的方法：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">IntSet</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">data</span> <span style="color:#66d9ef">map</span>[<span style="color:#66d9ef">int</span>]<span style="color:#66d9ef">bool</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">NewIntSet</span>() <span style="color:#a6e22e">IntSet</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">IntSet</span>{make(<span style="color:#66d9ef">map</span>[<span style="color:#66d9ef">int</span>]<span style="color:#66d9ef">bool</span>)}
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">set</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">IntSet</span>) <span style="color:#a6e22e">Add</span>(<span style="color:#a6e22e">x</span> <span style="color:#66d9ef">int</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">set</span>.<span style="color:#a6e22e">data</span>[<span style="color:#a6e22e">x</span>] = <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">set</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">IntSet</span>) <span style="color:#a6e22e">Delete</span>(<span style="color:#a6e22e">x</span> <span style="color:#66d9ef">int</span>) {
+</span></span><span style="display:flex;"><span>	delete(<span style="color:#a6e22e">set</span>.<span style="color:#a6e22e">data</span>, <span style="color:#a6e22e">x</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">set</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">IntSet</span>) <span style="color:#a6e22e">Contains</span>(<span style="color:#a6e22e">x</span> <span style="color:#66d9ef">int</span>) <span style="color:#66d9ef">bool</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">set</span>.<span style="color:#a6e22e">data</span>[<span style="color:#a6e22e">x</span>]
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">set</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">IntSet</span>) <span style="color:#a6e22e">String</span>() <span style="color:#66d9ef">string</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> len(<span style="color:#a6e22e">set</span>.<span style="color:#a6e22e">data</span>) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;{}&#34;</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">ints</span> <span style="color:#f92672">:=</span> make([]<span style="color:#66d9ef">int</span>, <span style="color:#ae81ff">0</span>, len(<span style="color:#a6e22e">set</span>.<span style="color:#a6e22e">data</span>))
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">set</span>.<span style="color:#a6e22e">data</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">ints</span> = append(<span style="color:#a6e22e">ints</span>, <span style="color:#a6e22e">i</span>)
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">sort</span>.<span style="color:#a6e22e">Ints</span>(<span style="color:#a6e22e">ints</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">parts</span> <span style="color:#f92672">:=</span> make([]<span style="color:#66d9ef">string</span>, <span style="color:#ae81ff">0</span>, len(<span style="color:#a6e22e">ints</span>))
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">ints</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">parts</span> = append(<span style="color:#a6e22e">parts</span>, <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Sprint</span>(<span style="color:#a6e22e">i</span>))
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;{&#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">strings</span>.<span style="color:#a6e22e">Join</span>(<span style="color:#a6e22e">parts</span>, <span style="color:#e6db74">&#34;,&#34;</span>) <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;}&#34;</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>使用方法如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">ints</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">NewIntSet</span>()
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> []<span style="color:#66d9ef">int</span>{<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">7</span>} {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">ints</span>.<span style="color:#a6e22e">Add</span>(<span style="color:#a6e22e">i</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">ints</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> []<span style="color:#66d9ef">int</span>{<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">6</span>, <span style="color:#ae81ff">7</span>} {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Print</span>(<span style="color:#a6e22e">i</span>, <span style="color:#a6e22e">ints</span>.<span style="color:#a6e22e">Contains</span>(<span style="color:#a6e22e">i</span>), <span style="color:#e6db74">&#34; &#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">ints</span>.<span style="color:#a6e22e">Delete</span>(<span style="color:#a6e22e">i</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">ints</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>重點來了，我們需要擴充一個 Undo 的還原功能，方法如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">UndoableIntSet</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">IntSet</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">functions</span> []<span style="color:#66d9ef">func</span>()
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">NewUndoableIntSet</span>() <span style="color:#a6e22e">UndoableIntSet</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">UndoableIntSet</span>{<span style="color:#a6e22e">NewIntSet</span>(), <span style="color:#66d9ef">nil</span>}
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// override</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">set</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">UndoableIntSet</span>) <span style="color:#a6e22e">Add</span>(<span style="color:#a6e22e">x</span> <span style="color:#66d9ef">int</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> !<span style="color:#a6e22e">set</span>.<span style="color:#a6e22e">Contains</span>(<span style="color:#a6e22e">x</span>) {
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">set</span>.<span style="color:#a6e22e">data</span>[<span style="color:#a6e22e">x</span>] = <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">set</span>.<span style="color:#a6e22e">functions</span> = append(<span style="color:#a6e22e">set</span>.<span style="color:#a6e22e">functions</span>, <span style="color:#66d9ef">func</span>() { <span style="color:#a6e22e">set</span>.<span style="color:#a6e22e">Delete</span>(<span style="color:#a6e22e">x</span>) })
+</span></span><span style="display:flex;"><span>	} <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">set</span>.<span style="color:#a6e22e">functions</span> = append(<span style="color:#a6e22e">set</span>.<span style="color:#a6e22e">functions</span>, <span style="color:#66d9ef">nil</span>)
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// override</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">set</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">UndoableIntSet</span>) <span style="color:#a6e22e">Delete</span>(<span style="color:#a6e22e">x</span> <span style="color:#66d9ef">int</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">set</span>.<span style="color:#a6e22e">Contains</span>(<span style="color:#a6e22e">x</span>) {
+</span></span><span style="display:flex;"><span>		delete(<span style="color:#a6e22e">set</span>.<span style="color:#a6e22e">data</span>, <span style="color:#a6e22e">x</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">set</span>.<span style="color:#a6e22e">functions</span> = append(<span style="color:#a6e22e">set</span>.<span style="color:#a6e22e">functions</span>, <span style="color:#66d9ef">func</span>() { <span style="color:#a6e22e">set</span>.<span style="color:#a6e22e">Add</span>(<span style="color:#a6e22e">x</span>) })
+</span></span><span style="display:flex;"><span>	} <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">set</span>.<span style="color:#a6e22e">functions</span> = append(<span style="color:#a6e22e">set</span>.<span style="color:#a6e22e">functions</span>, <span style="color:#66d9ef">nil</span>)
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">set</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">UndoableIntSet</span>) <span style="color:#a6e22e">Undo</span>() <span style="color:#66d9ef">error</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> len(<span style="color:#a6e22e">set</span>.<span style="color:#a6e22e">functions</span>) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">errors</span>.<span style="color:#a6e22e">New</span>(<span style="color:#e6db74">&#34;No functions to undo&#34;</span>)
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">index</span> <span style="color:#f92672">:=</span> len(<span style="color:#a6e22e">set</span>.<span style="color:#a6e22e">functions</span>) <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">function</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">set</span>.<span style="color:#a6e22e">functions</span>[<span style="color:#a6e22e">index</span>]; <span style="color:#a6e22e">function</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">function</span>()
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">set</span>.<span style="color:#a6e22e">functions</span>[<span style="color:#a6e22e">index</span>] = <span style="color:#66d9ef">nil</span> <span style="color:#75715e">// free closure for garbage collection</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">set</span>.<span style="color:#a6e22e">functions</span> = <span style="color:#a6e22e">set</span>.<span style="color:#a6e22e">functions</span>[:<span style="color:#a6e22e">index</span>]
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>可以如下使用 Undo() 功能：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">ints</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">NewUndoableIntSet</span>()
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> []<span style="color:#66d9ef">int</span>{<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">7</span>} {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">ints</span>.<span style="color:#a6e22e">Add</span>(<span style="color:#a6e22e">i</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">ints</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> []<span style="color:#66d9ef">int</span>{<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">6</span>, <span style="color:#ae81ff">7</span>} {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Print</span>(<span style="color:#a6e22e">i</span>, <span style="color:#a6e22e">ints</span>.<span style="color:#a6e22e">Contains</span>(<span style="color:#a6e22e">i</span>), <span style="color:#e6db74">&#34; &#34;</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">ints</span>.<span style="color:#a6e22e">Delete</span>(<span style="color:#a6e22e">i</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">ints</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">ints</span>.<span style="color:#a6e22e">Undo</span>(); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">break</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">ints</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>為了 Undo 功能，NewUndoableIntSet 幾乎重寫了 IntSet 和「寫」有關的所有方法，但是，別的類別可能也需要 Undo，難道每個類別都必須重寫嗎?</p>
+<p>嘗試使用之前幾篇文章提到的泛型、函式語言程式設計、IoC 控制反轉來解決這個問題。</p>
+<p>首先我們需要做幾件事情：</p>
+<ul>
+<li>定義一個 Undo[] 的函式陣列（當成 stack 用）</li>
+<li>實做通用的 Add() 方法；用函式指標，並把指標存到 Undo[] 陣列中</li>
+<li>Undo() 函式中，循環 Undo[] 陣列，並執行，執行完做 stack pop</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Undo</span> []<span style="color:#66d9ef">func</span>()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">undo</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Undo</span>) <span style="color:#a6e22e">Add</span>(<span style="color:#a6e22e">function</span> <span style="color:#66d9ef">func</span>()) {
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">*</span><span style="color:#a6e22e">undo</span> = append(<span style="color:#f92672">*</span><span style="color:#a6e22e">undo</span>, <span style="color:#a6e22e">function</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">undo</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Undo</span>) <span style="color:#a6e22e">Undo</span>() <span style="color:#66d9ef">error</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">functions</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">undo</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> len(<span style="color:#a6e22e">functions</span>) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">errors</span>.<span style="color:#a6e22e">New</span>(<span style="color:#e6db74">&#34;No functions to undo&#34;</span>)
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">index</span> <span style="color:#f92672">:=</span> len(<span style="color:#a6e22e">functions</span>) <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">function</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">functions</span>[<span style="color:#a6e22e">index</span>]; <span style="color:#a6e22e">function</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">function</span>()
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">functions</span>[<span style="color:#a6e22e">index</span>] = <span style="color:#66d9ef">nil</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">*</span><span style="color:#a6e22e">undo</span> = <span style="color:#a6e22e">functions</span>[:<span style="color:#a6e22e">index</span>]
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>接著 IntSet 可以改成：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">IntSet</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">data</span> <span style="color:#66d9ef">map</span>[<span style="color:#66d9ef">int</span>]<span style="color:#66d9ef">bool</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">undo</span> <span style="color:#a6e22e">Undo</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">NewIntSet</span>() <span style="color:#a6e22e">IntSet</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">IntSet</span>{<span style="color:#a6e22e">data</span>: make(<span style="color:#66d9ef">map</span>[<span style="color:#66d9ef">int</span>]<span style="color:#66d9ef">bool</span>)}
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">set</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">IntSet</span>) <span style="color:#a6e22e">Add</span>(<span style="color:#a6e22e">x</span> <span style="color:#66d9ef">int</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> !<span style="color:#a6e22e">set</span>.<span style="color:#a6e22e">Contains</span>(<span style="color:#a6e22e">x</span>) {
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">set</span>.<span style="color:#a6e22e">data</span>[<span style="color:#a6e22e">x</span>] = <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">set</span>.<span style="color:#a6e22e">undo</span>.<span style="color:#a6e22e">Add</span>(<span style="color:#66d9ef">func</span>() { <span style="color:#a6e22e">set</span>.<span style="color:#a6e22e">Delete</span>(<span style="color:#a6e22e">x</span>) })
+</span></span><span style="display:flex;"><span>	} <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">set</span>.<span style="color:#a6e22e">undo</span>.<span style="color:#a6e22e">Add</span>(<span style="color:#66d9ef">nil</span>)
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">set</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">IntSet</span>) <span style="color:#a6e22e">Delete</span>(<span style="color:#a6e22e">x</span> <span style="color:#66d9ef">int</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">set</span>.<span style="color:#a6e22e">Contains</span>(<span style="color:#a6e22e">x</span>) {
+</span></span><span style="display:flex;"><span>		delete(<span style="color:#a6e22e">set</span>.<span style="color:#a6e22e">data</span>, <span style="color:#a6e22e">x</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">set</span>.<span style="color:#a6e22e">undo</span>.<span style="color:#a6e22e">Add</span>(<span style="color:#66d9ef">func</span>() { <span style="color:#a6e22e">set</span>.<span style="color:#a6e22e">Add</span>(<span style="color:#a6e22e">x</span>) })
+</span></span><span style="display:flex;"><span>	} <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">set</span>.<span style="color:#a6e22e">undo</span>.<span style="color:#a6e22e">Add</span>(<span style="color:#66d9ef">nil</span>)
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">set</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">IntSet</span>) <span style="color:#a6e22e">Contains</span>(<span style="color:#a6e22e">x</span> <span style="color:#66d9ef">int</span>) <span style="color:#66d9ef">bool</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">set</span>.<span style="color:#a6e22e">data</span>[<span style="color:#a6e22e">x</span>]
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">set</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">IntSet</span>) <span style="color:#a6e22e">Undo</span>() <span style="color:#66d9ef">error</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">set</span>.<span style="color:#a6e22e">undo</span>.<span style="color:#a6e22e">Undo</span>()
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>其中 Add()、Delete()、Undo() 函式中都使用 Undo 介面。</p>
+<p>從原本的流程中抽象出 Undo (Control、how to do)，至於實際的業務邏輯 (Logic、what to undo)，則交給 struct 自己負責；IntSet.Add() 的 undo 是 set.Delete()；而 set.Delete(x) 的 undo 是 set.Add(x)。</p>
+<p>這和 <a href="../generic-programming/#%E6%9B%B4%E5%A4%9A%E7%9A%84%E6%8A%BD%E8%B1%A1">C++ 的泛型</a>有點像，也和 map、reduce、filter 把控制邏輯、業務邏輯分開的概念類似。</p>
+<p>另外從一開始的 UndoableIntSet 包裝 IntSet 類別，到反過來 IntSet 依賴 Undo 類別，正是 IoC 控制反轉。</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/tags/%E7%A8%8B%E5%BC%8F%E8%A8%AD%E8%A8%88/">程式設計</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="http://localhost:1313/posts/91-unit-test-course/">
+    <span class="title">« Prev</span>
+    <br>
+    <span>針對遺留代碼加入單元測試的藝術 上課心得</span>
+  </a>
+  <a class="next" href="http://localhost:1313/posts/prototype-based-programming/">
+    <span class="title">Next »</span>
+    <br>
+    <span>Sorry，Prototype 真的可以為所欲為</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2025 <a href="http://localhost:1313/"></a></span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

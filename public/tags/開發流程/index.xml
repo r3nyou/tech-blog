@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>開發流程 on </title>
+    <link>http://localhost:1313/tags/%E9%96%8B%E7%99%BC%E6%B5%81%E7%A8%8B/</link>
+    <description>Recent content in 開發流程 on </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-tw</language>
+    <lastBuildDate>Fri, 03 Jun 2022 14:29:01 +0800</lastBuildDate><atom:link href="http://localhost:1313/tags/%E9%96%8B%E7%99%BC%E6%B5%81%E7%A8%8B/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>不好好地 Code Review 怎麼行</title>
+      <link>http://localhost:1313/posts/code-review/</link>
+      <pubDate>Fri, 03 Jun 2022 14:29:01 +0800</pubDate>
+      
+      <guid>http://localhost:1313/posts/code-review/</guid>
+      <description>&lt;p&gt;Code Review 的好處是沒有爭議的，關於如何 Code Review、與諸多好處，可以參考：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://blog.palantir.com/code-review-best-practices-19e02780015f&#34;&gt;Code Review Best Practices&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://dzone.com/articles/how-google-does-code-review&#34;&gt;How Google Does Code Review&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://thenewstack.io/linkedin-code-review/&#34;&gt;LinkedIn’s Tips for Highly Effective Code Review&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;但我發現有許多公司沒有 Code Reivew，所以蒐集了一些反對的原因：&lt;/p&gt;
+&lt;h2 id=&#34;不做-code-review-的原因&#34;&gt;不做 Code Review 的原因&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;1. 有 QA，不要有 Bug 就好，Code Review 沒太大意義&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;我想這是誤會，Code Review 並不負責找出程式碼的錯誤，這也是很多 Reviewer 的誤區，Code Review 應該把力氣放在程式碼的品質，例如可讀性、維護性、擴展性等，錯誤應該是由測試來處理的。&lt;/p&gt;
+&lt;p&gt;當然我不是說，不能在 Code Review 去檢查出 Bug，只是那並非 Code Review 主要目的。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;2. 需求變化太快，專案的生命週期短，寫好程式沒有意義，反正過沒多久就拋棄了&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;如果是一次性的東西、短期的解決方案，的確不需要太高品質的程式碼，反正用沒多久就要丟了，但至少要 Review 一下這個短期的程式碼有沒有影響到長期程式碼吧? 如果整個專案全都是臨時的程式，那要思考一下自己的部門是否也是一個臨時部門?&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;3. 時間太緊急，連 coding 都來不及，哪有時間 Code Reivew&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;時間緊急、需求變化太快，其實與 Code Reivew 無關，而是管理的問題，這些問題也不該成為反對 Code Review 的理由；有些人能看到背後價值，堅持做對的事情，有些人因噎廢食，而人與人的不同就在此。&lt;/p&gt;
+&lt;h2 id=&#34;code-review-做不起來&#34;&gt;Code Review 做不起來&lt;/h2&gt;
+&lt;p&gt;大家都知道 Code Review 的好，但以下情況會造成 Code Review 沒效果：&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

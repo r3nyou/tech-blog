@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<meta name="robots" content="noindex, nofollow">
+<title>光看標題是學不會物件導向的 | </title>
+<meta name="keywords" content="程式設計">
+<meta name="description" content="既然點進來看內文了，這篇文章是介紹物件導向程式設計方法。
+之前在 Functional programming 的文章介紹過，Functional programming 是透過組合各種函式來完成功能，函式是計算過程的抽象，但程式碼除了計算過程以外，還需要處理資料，也就是所謂的「狀態」，關於狀態的處理，就需要提到物件導向程式設計 (Object-oriented programming)。
+所謂物件指的是類別的實體，把物件當成程式的基本單位，並將資料封裝在其中，程式會被設計成一個個獨立的物件，每個物件都要能接受資料、處理資料、傳資料給其他物件，好比一個個小型的機器一樣，各自獨立，且彼此互相關聯。這與傳統的程式設計方法不同，傳統的想法是把程式設計成一系列對機器的指令、或者一系列函式的集合。
+目前物件導向被廣泛使用在大型專案中，優點是靈活性、可維護性；另外有部分人認為物件導向更容易分析、理解程式。
+物件導向領域有一本經典書籍，Design Pattern，這本書介紹了 23 個設計模式，說的是二個觀念：
+Program to an interface, not an implementation.
+
+呼叫者不需要知道資料型別、資料結構、算法的細節
+呼叫者不需要知道實作細節，只要知道提供什麼介面
+方便封裝、抽象、多型、動態綁定
+符合物件(導向)的特質
+
+Favor object composition over class inheritance.
+
+繼承需要暴露父類別的設計、實作給子類別
+父類別改變會造成子類別也要改變
+很多人有誤區，認為繼承是為了程式碼重用，實際上子類別仍需要重新實作很多父類別的方法，其實繼承更多是為了多型
+
+範例一 組合物件
+假設一個家具的系統，需求如下：
+
+四個物體：塑膠桌、塑膠椅、木頭桌、木頭椅
+四種屬性：價格、重量、密度、燃點
+
+物件導向設計為下圖：
+
+
+
+材質類別 Material，有密度、燃點屬性
+家具類別 Furniture，有價格、體積屬性
+Furniture 耦合了 Material，具體是木製、塑膠製，在建立家具物件時注入材質物件即可
+家具類能用自己的體積，與材質物件的密度，計算出重量
+
+這樣設計的優點是
+
+好理解，與現實世界對應
+材質類別可重複使用，前面有提到物件導向喜歡組合，而非繼承
+這個設計方式叫 Bridge pattern
+
+Functional programming 強調動詞，而 Object-oriented programming 強調名詞，關注介面之間的關係，利用多型來達成不同的具體實作。
+範例二 組合功能
+來看另一個例子，有個電商系統要處理不同折扣的訂單，有的原價、有的要打折。
+以 Java 為例，先寫一個介面，輸入原始價格，返回根據不同方式的折扣價。
+interface BillingStrategy {
+	public double getActPrice(double rawPrice);
+}
+然後實作 BillingStrategy 介面">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/posts/object-oritend-programming/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.min.0ae5145492ee91fac5036e87965b1395678c6daee907d175e51d2af65e49fe1b.css" integrity="sha256-CuUUVJLukfrFA26HllsTlWeMba7pB9F15R0q9l5J/hs=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.min.555af97124d54bb1457985dd081b8f5616a48103aafeb30ac89fde835d65aa6c.js" integrity="sha256-VVr5cSTVS7FFeYXdCBuPVhakgQOq/rMKyJ/eg11lqmw="
+    onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/object-oritend-programming/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --hljs-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+	<ul id="menu">
+            <li>
+                <a href="http://localhost:1313/categories/" title="Categories">
+                    <span>Categories</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/tags/" title="Tags">
+                    <span>Tags</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/archives/" title="Archives">
+                    <span>Archives</span>
+                </a>
+            </li>
+        </ul>
+        <div class="logo">
+            <div class="social-icons">
+    <a href="https://github.com/r3nyou" target="_blank" rel="noopener noreferrer me" title="Github">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path
+        d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+    </path>
+</svg>
+    </a>
+    <a href="mailto:renyou815@gmail.com" target="_blank" rel="noopener noreferrer me" title="Email">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 21" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+    <polyline points="22,6 12,13 2,6"></polyline>
+</svg>
+    </a>
+</div>
+
+        </div>
+    </nav>
+    <article class="first-entry home-info">
+        <header class="entry-header">
+            <h1>Not a Real Programmer</h1>
+        </header>
+        <div class="entry-content">
+            <p>Hi, I&rsquo;m Marcus, and I&rsquo;m a mediocre programmer.</p>
+        </div>
+        <footer class="entry-footer">
+            
+        </footer>
+    </article></header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title">
+      光看標題是學不會物件導向的
+    </h1>
+    <div class="post-meta">&lt;span title=&#39;2022-05-27 10:20:05 &#43;0800 CST&#39;&gt;May 27, 2022&lt;/span&gt;
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#%e7%af%84%e4%be%8b%e4%b8%80-%e7%b5%84%e5%90%88%e7%89%a9%e4%bb%b6" aria-label="範例一 組合物件">範例一 組合物件</a></li>
+                <li>
+                    <a href="#%e7%af%84%e4%be%8b%e4%ba%8c-%e7%b5%84%e5%90%88%e5%8a%9f%e8%83%bd" aria-label="範例二 組合功能">範例二 組合功能</a></li>
+                <li>
+                    <a href="#%e7%af%84%e4%be%8b%e4%b8%89-%e8%b3%87%e6%ba%90%e7%ae%a1%e7%90%86" aria-label="範例三 資源管理">範例三 資源管理</a></li>
+                <li>
+                    <a href="#ioc-%e6%8e%a7%e5%88%b6%e5%8f%8d%e8%bd%89" aria-label="IoC 控制反轉">IoC 控制反轉</a></li>
+                <li>
+                    <a href="#%e7%b8%bd%e7%b5%90" aria-label="總結">總結</a></li>
+                <li>
+                    <a href="#reference" aria-label="reference">reference</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><p>既然點進來看內文了，這篇文章是介紹物件導向程式設計方法。</p>
+<p>之前在 <a href="../functional-programming">Functional programming 的文章</a>介紹過，Functional programming 是透過組合各種函式來完成功能，函式是計算過程的抽象，但程式碼除了計算過程以外，還需要處理資料，也就是所謂的「狀態」，關於狀態的處理，就需要提到物件導向程式設計 (Object-oriented programming)。</p>
+<p>所謂物件指的是類別的實體，把物件當成程式的基本單位，並將資料封裝在其中，程式會被設計成一個個獨立的物件，每個物件都要能接受資料、處理資料、傳資料給其他物件，好比一個個小型的機器一樣，各自獨立，且彼此互相關聯。這與傳統的程式設計方法不同，傳統的想法是把程式設計成一系列對機器的指令、或者一系列函式的集合。</p>
+<p>目前物件導向被廣泛使用在大型專案中，優點是靈活性、可維護性；另外有部分人認為物件導向更容易分析、理解程式。</p>
+<p>物件導向領域有一本經典書籍，<a href="https://www.amazon.com/Design-Patterns-Object-Oriented-Addison-Wesley-Professional-ebook/dp/B000SEIBB8">Design Pattern</a>，這本書介紹了 23 個設計模式，說的是二個觀念：</p>
+<p><strong>Program to an interface, not an implementation.</strong></p>
+<ul>
+<li>呼叫者不需要知道資料型別、資料結構、算法的細節</li>
+<li>呼叫者不需要知道實作細節，只要知道提供什麼介面</li>
+<li>方便封裝、抽象、多型、動態綁定</li>
+<li>符合物件(導向)的特質</li>
+</ul>
+<p><strong>Favor object composition over class inheritance.</strong></p>
+<ul>
+<li>繼承需要暴露父類別的設計、實作給子類別</li>
+<li>父類別改變會造成子類別也要改變</li>
+<li>很多人有誤區，認為繼承是為了程式碼重用，實際上子類別仍需要重新實作很多父類別的方法，其實繼承更多是為了多型</li>
+</ul>
+<h2 id="範例一-組合物件">範例一 組合物件<a hidden class="anchor" aria-hidden="true" href="#範例一-組合物件">#</a></h2>
+<p>假設一個家具的系統，需求如下：</p>
+<ul>
+<li>四個物體：塑膠桌、塑膠椅、木頭桌、木頭椅</li>
+<li>四種屬性：價格、重量、密度、燃點</li>
+</ul>
+<p>物件導向設計為下圖：
+<img loading="lazy" src="/img/object-oritend-programming/object-composition-uml.png" alt="object composition uml"  />
+</p>
+<ul>
+<li>材質類別 Material，有密度、燃點屬性</li>
+<li>家具類別 Furniture，有價格、體積屬性</li>
+<li>Furniture 耦合了 Material，具體是木製、塑膠製，在建立家具物件時注入材質物件即可</li>
+<li>家具類能用自己的體積，與材質物件的密度，計算出重量</li>
+</ul>
+<p>這樣設計的優點是</p>
+<ul>
+<li>好理解，與現實世界對應</li>
+<li>材質類別可重複使用，前面有提到物件導向喜歡組合，而非繼承</li>
+<li>這個設計方式叫 Bridge pattern</li>
+</ul>
+<p>Functional programming 強調動詞，而 Object-oriented programming 強調名詞，關注介面之間的關係，利用多型來達成不同的具體實作。</p>
+<h2 id="範例二-組合功能">範例二 組合功能<a hidden class="anchor" aria-hidden="true" href="#範例二-組合功能">#</a></h2>
+<p>來看另一個例子，有個電商系統要處理不同折扣的訂單，有的原價、有的要打折。</p>
+<p>以 Java 為例，先寫一個介面，輸入原始價格，返回根據不同方式的折扣價。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">interface</span> <span style="color:#a6e22e">BillingStrategy</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">double</span> <span style="color:#a6e22e">getActPrice</span>(<span style="color:#66d9ef">double</span> rawPrice);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>然後實作 BillingStrategy 介面</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">NormalStrategy</span> <span style="color:#66d9ef">implements</span> BillingStrategy {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">double</span> <span style="color:#a6e22e">getActPrice</span>(<span style="color:#66d9ef">double</span> rawPrice) {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> rawPrice;
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">XmasStrategy</span> <span style="color:#66d9ef">implements</span> BillingStrategy {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">double</span> <span style="color:#a6e22e">getActPrice</span>(<span style="color:#66d9ef">double</span> rawPrice) {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> rawPrice <span style="color:#f92672">*</span> 0.<span style="color:#a6e22e">5</span>;
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>上面實作了二種折扣方式，NormalStrategy 是原價，XmasStrategy 是聖誕節半價。</p>
+<p>接著，訂單的品項除了有商品的價格、數量等，還包含「折扣方式」。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">OrderItem</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">public</span> String Name;
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">double</span> Price;
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> Quantity;
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">public</span> BillingStrategy Strategy;
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">public</span> <span style="color:#a6e22e">OrderItem</span>(String name, <span style="color:#66d9ef">double</span> price, <span style="color:#66d9ef">int</span> quantity, BillingStrategy strategy) {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">Name</span> <span style="color:#f92672">=</span> name;
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">Price</span> <span style="color:#f92672">=</span> price;
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">Quantity</span> <span style="color:#f92672">=</span> quantity;
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">Strategy</span> <span style="color:#f92672">=</span> strategy;
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>最後，在訂單類別 Order 中封裝 OrderItem 的串列；加入商品時要給一個折扣方式 BillingStrategy；在 PayBill() 則計算訂單的總價。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>calss Order {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">private</span> List<span style="color:#f92672">&lt;</span>OrderItem<span style="color:#f92672">&gt;</span> orderItems <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;</span>OrderItem<span style="color:#f92672">&gt;</span>();
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">private</span> BillingStrategy strategy <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> NormalStrategy();
+</span></span><span style="display:flex;"><span>	
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">Add</span>(String name, <span style="color:#66d9ef">double</span> price, <span style="color:#66d9ef">int</span> quantity, BillingStrategy strategy) {
+</span></span><span style="display:flex;"><span>		orderItems.<span style="color:#a6e22e">add</span>(<span style="color:#66d9ef">new</span> OrderItem(name, price, quantity, strategy));
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">PayBill</span>() {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">double</span> sum <span style="color:#f92672">=</span> 0;
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">for</span> (OrderItem item : orderItems) {
+</span></span><span style="display:flex;"><span>			actPrice <span style="color:#f92672">=</span> item.<span style="color:#a6e22e">Strategy</span>.<span style="color:#a6e22e">getActPrice</span>(item.<span style="color:#a6e22e">price</span> <span style="color:#f92672">*</span> item.<span style="color:#a6e22e">quantity</span>);
+</span></span><span style="display:flex;"><span>			sum <span style="color:#f92672">+=</span> actPrice;
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>		System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(<span style="color:#e6db74">&#34;Total due: &#34;</span> <span style="color:#f92672">+</span> sum);
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>上面範例把折扣計算與訂單處理流程分開，可以將不同商品注入不同的折扣方式，有很高的靈活度。這個設計方式叫 Strategy pattern。</p>
+<h2 id="範例三-資源管理">範例三 資源管理<a hidden class="anchor" aria-hidden="true" href="#範例三-資源管理">#</a></h2>
+<p>先看一段程式碼：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>mutex m;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">test</span>() {
+</span></span><span style="display:flex;"><span>	m.lock();
+</span></span><span style="display:flex;"><span>	Func();
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span> ok()) <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// do something else...
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	m.unlock();
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>這段程式碼有個問題，如果 if 條件為真 early return 的話，沒有 release lock，所以要在 return 前先釋放。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>mutex m;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">test</span>() {
+</span></span><span style="display:flex;"><span>	m.lock();
+</span></span><span style="display:flex;"><span>	Func();
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span> ok()) {
+</span></span><span style="display:flex;"><span>		m.unlock();
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// do something else...
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	m.unlock();
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>但這樣做的缺點是，所有 return 的地方都要加上 m.unlock(); 導致難以維護，這時可以用物件導向的設計方法，先設計一個代理類別。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">lock_guard</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>		mutex <span style="color:#f92672">&amp;</span>_m;
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>		lock_guard(mutex <span style="color:#f92672">&amp;</span>m)<span style="color:#f92672">:</span>_m(m) { _m.lock(); }
+</span></span><span style="display:flex;"><span>		<span style="color:#f92672">~</span>lock_guard() { _m.unlock(); }
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><p>之後的程式碼就可以這樣使用：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>mutex m;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">test</span>() {
+</span></span><span style="display:flex;"><span>	lock_guard guard(m);
+</span></span><span style="display:flex;"><span>	Func();
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span>(<span style="color:#f92672">!</span> ok()) {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// do something else...
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><p>這個設計方式叫 Proxy pattern，用 Proxy pattern 來達成 C++ 的 RAII 技術(Resource Acquisition Is Initialization)，把控制資源分配、釋放的邏輯都交給代理類別，然後我們只要管業務邏輯即可。</p>
+<p>上面三個範例，介紹了物件導向的幾個特點：</p>
+<ul>
+<li>用介面抽象具體類別</li>
+<li>類別之間耦合的是介面，而非具體類別；也就是多型，能強化擴展性</li>
+<li>這就是 Program to an interface</li>
+<li>這些就是物件導向的核心概念，也是 IoC 控制反轉、DIP 控制反轉的原理</li>
+</ul>
+<h2 id="ioc-控制反轉">IoC 控制反轉<a hidden class="anchor" aria-hidden="true" href="#ioc-控制反轉">#</a></h2>
+<p>控制反轉 Inversion of control 的概念，不只用於程式設計上，也用於系統設計，甚至真實世界也能看到實際例子。</p>
+<p>先舉一個程式設計的範例，設計一個燈的控制開關：
+<img loading="lazy" src="/img/object-oritend-programming/ioc-uml-1.png" alt="ioc uml 1"  />
+</p>
+<p>然後新的需求是要擴展不同的燈，於是變成以下這樣：
+<img loading="lazy" src="/img/object-oritend-programming/ioc-uml-2.png" alt="ioc uml 2"  />
+</p>
+<p>但是有一天開關除了控制燈以外，還要控制其他東西，結果因為開關類別耦合了燈泡類別，導致無法擴展。</p>
+<p>看看 IoC 怎麼解決這個問題，就像真實世界一樣，開關工廠只做好開關本身，把電接通、把電中斷，根本不需要管開關要控制什麼東西；而燈泡工廠也一樣，只要把電源開關介面做好，符合標準的介面的開關就可以裝在燈泡上使用。</p>
+<p>IoC 的設計會是：
+<img loading="lazy" src="/img/object-oritend-programming/ioc-uml-3.png" alt="ioc uml 3"  />
+</p>
+<p>舉一個真實世界的例子，假設有個賣電器的公司，想把產品放在各大賣場銷售，結果各大賣場的規則都不同，隨著銷售管道越多就越複雜；而 IoC 是電器公司自己制定標準，各大賣場想在櫃上賣電器產品，就要符合電器公司的標準，才能成為「經銷商」。</p>
+<h2 id="總結">總結<a hidden class="anchor" aria-hidden="true" href="#總結">#</a></h2>
+<p>總結一下物件導向程式設計的優點：</p>
+<ul>
+<li>物件與真實世界的概念對應，容易理解</li>
+<li>強調名詞，而非動詞，關注的是物件之間的介面</li>
+<li>根據需求的特徵形成高內聚的物件，分離抽象與具體實作，強化擴展性、可重用性</li>
+<li>有大量優秀設計原則、模式可參考</li>
+<li>S.O.L.I.D、IoC、DIP</li>
+</ul>
+<p>而物件導向的缺點是：</p>
+<ul>
+<li>程式碼必須要在類別中，換言之，鼓勵了型別</li>
+<li>程式碼要透過物件做抽象，導致厚重的黏合層(Glue code)</li>
+<li>大量封裝、與鼓勵使用狀態，造成不透明，在併發特別容易出問題</li>
+</ul>
+<p>透過物件來做抽象，把程式碼分散到不同類別中，執行起來就需要把這些類別黏合起來，導致厚重的黏合層(Glue code)；像 Java Spring 中用到注入、鼓勵黏合、大量封裝，完全不知道裡面做了什麼，這些都是物件導向的缺點。</p>
+<p>物件導向是目前的主流，但其實有許多人不喜歡這種設計，特別是 Generic、Functional programming 的支持者，彼此甚至有種宗教情節。</p>
+<p>我認為在沒有確認場景、開發何種系統的前提下，單純討論程式設計方法，動機不是別有居心，就是出於個人偏好講爽的，沒有意義，也不會有結果。實際使用上，可以同時使用多種的設計方法，例如 Java 8 後也支援了 Lambda。</p>
+<p>總之，這篇文章介紹了物件導向程式設計，透過範例說明核心的概念，同時介紹了幾種 Design pattern，接著透過程式設計、真實世界的範例說明 IoC，最後總結了優缺點。</p>
+<h2 id="reference">reference<a hidden class="anchor" aria-hidden="true" href="#reference">#</a></h2>
+<ul>
+<li><a href="https://en.cppreference.com/w/cpp/language/raii">https://en.cppreference.com/w/cpp/language/raii</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Inversion_of_control">https://en.wikipedia.org/wiki/Inversion_of_control</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Glue_code">https://en.wikipedia.org/wiki/Glue_code</a></li>
+<li><a href="https://docs.oracle.com/javase/tutorial/java/javaOO/lambdaexpressions.html">https://docs.oracle.com/javase/tutorial/java/javaOO/lambdaexpressions.html</a></li>
+</ul>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/tags/%E7%A8%8B%E5%BC%8F%E8%A8%AD%E8%A8%88/">程式設計</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="http://localhost:1313/posts/code-review/">
+    <span class="title">« Prev</span>
+    <br>
+    <span>不好好地 Code Review 怎麼行</span>
+  </a>
+  <a class="next" href="http://localhost:1313/posts/work-diary/">
+    <span class="title">Next »</span>
+    <br>
+    <span>寫日誌這種事，不管到幾歲都討厭</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2025 <a href="http://localhost:1313/"></a></span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>
