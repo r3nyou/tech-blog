@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>開發流程 on </title>
-    <link>https://www.renyou.tech/categories/%E9%96%8B%E7%99%BC%E6%B5%81%E7%A8%8B/</link>
+    <link>https://marc-tech.zeabur.app/categories/%E9%96%8B%E7%99%BC%E6%B5%81%E7%A8%8B/</link>
     <description>Recent content in 開發流程 on </description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-tw</language>
-    <lastBuildDate>Fri, 03 Jun 2022 14:29:01 +0800</lastBuildDate><atom:link href="https://www.renyou.tech/categories/%E9%96%8B%E7%99%BC%E6%B5%81%E7%A8%8B/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 03 Jun 2022 14:29:01 +0800</lastBuildDate><atom:link href="https://marc-tech.zeabur.app/categories/%E9%96%8B%E7%99%BC%E6%B5%81%E7%A8%8B/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>不好好地 Code Review 怎麼行</title>
-      <link>https://www.renyou.tech/posts/code-review/</link>
+      <link>https://marc-tech.zeabur.app/posts/code-review/</link>
       <pubDate>Fri, 03 Jun 2022 14:29:01 +0800</pubDate>
       
-      <guid>https://www.renyou.tech/posts/code-review/</guid>
+      <guid>https://marc-tech.zeabur.app/posts/code-review/</guid>
       <description>&lt;p&gt;Code Review 的好處是沒有爭議的，關於如何 Code Review、與諸多好處，可以參考：&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://blog.palantir.com/code-review-best-practices-19e02780015f&#34;&gt;Code Review Best Practices&lt;/a&gt;&lt;/li&gt;
