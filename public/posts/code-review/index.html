@@ -1,11 +1,21 @@
 <!DOCTYPE html>
 <html lang="en" dir="auto">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<head><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-<meta name="robots" content="noindex, nofollow">
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-1QE8P64SZS"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-1QE8P64SZS');
+</script>
+
+<meta name="robots" content="index, follow">
 <title>不好好地 Code Review 怎麼行 | </title>
 <meta name="keywords" content="開發流程">
 <meta name="description" content="Code Review 的好處是沒有爭議的，關於如何 Code Review、與諸多好處，可以參考：
@@ -26,18 +36,18 @@ LinkedIn’s Tips for Highly Effective Code Review
 Code Review 做不起來
 大家都知道 Code Review 的好，但以下情況會造成 Code Review 沒效果：">
 <meta name="author" content="">
-<link rel="canonical" href="http://localhost:1313/posts/code-review/">
+<link rel="canonical" href="https://www.renyou.tech/posts/code-review/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.min.0ae5145492ee91fac5036e87965b1395678c6daee907d175e51d2af65e49fe1b.css" integrity="sha256-CuUUVJLukfrFA26HllsTlWeMba7pB9F15R0q9l5J/hs=" rel="preload stylesheet" as="style">
 <script defer crossorigin="anonymous" src="/assets/js/highlight.min.555af97124d54bb1457985dd081b8f5616a48103aafeb30ac89fde835d65aa6c.js" integrity="sha256-VVr5cSTVS7FFeYXdCBuPVhakgQOq/rMKyJ/eg11lqmw="
     onload="hljs.initHighlightingOnLoad();"></script>
-<link rel="icon" href="http://localhost:1313/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
-<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
-<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<link rel="icon" href="https://www.renyou.tech/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://www.renyou.tech/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://www.renyou.tech/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://www.renyou.tech/apple-touch-icon.png">
+<link rel="mask-icon" href="https://www.renyou.tech/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/code-review/">
+<link rel="alternate" hreflang="en" href="https://www.renyou.tech/posts/code-review/">
 <noscript>
     <style>
         #theme-toggle,
@@ -75,6 +85,112 @@ Code Review 做不起來
 
     </style>
 </noscript>
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-1QE8P64SZS"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-1QE8P64SZS');
+        }
+      </script><meta property="og:title" content="不好好地 Code Review 怎麼行" />
+<meta property="og:description" content="Code Review 的好處是沒有爭議的，關於如何 Code Review、與諸多好處，可以參考：
+
+Code Review Best Practices
+How Google Does Code Review
+LinkedIn’s Tips for Highly Effective Code Review
+
+但我發現有許多公司沒有 Code Reivew，所以蒐集了一些反對的原因：
+不做 Code Review 的原因
+1. 有 QA，不要有 Bug 就好，Code Review 沒太大意義
+我想這是誤會，Code Review 並不負責找出程式碼的錯誤，這也是很多 Reviewer 的誤區，Code Review 應該把力氣放在程式碼的品質，例如可讀性、維護性、擴展性等，錯誤應該是由測試來處理的。
+當然我不是說，不能在 Code Review 去檢查出 Bug，只是那並非 Code Review 主要目的。
+2. 需求變化太快，專案的生命週期短，寫好程式沒有意義，反正過沒多久就拋棄了
+如果是一次性的東西、短期的解決方案，的確不需要太高品質的程式碼，反正用沒多久就要丟了，但至少要 Review 一下這個短期的程式碼有沒有影響到長期程式碼吧? 如果整個專案全都是臨時的程式，那要思考一下自己的部門是否也是一個臨時部門?
+3. 時間太緊急，連 coding 都來不及，哪有時間 Code Reivew
+時間緊急、需求變化太快，其實與 Code Reivew 無關，而是管理的問題，這些問題也不該成為反對 Code Review 的理由；有些人能看到背後價值，堅持做對的事情，有些人因噎廢食，而人與人的不同就在此。
+Code Review 做不起來
+大家都知道 Code Review 的好，但以下情況會造成 Code Review 沒效果：" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.renyou.tech/posts/code-review/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-06-03T14:29:01&#43;08:00" />
+<meta property="article:modified_time" content="2022-06-03T14:29:01&#43;08:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="不好好地 Code Review 怎麼行"/>
+<meta name="twitter:description" content="Code Review 的好處是沒有爭議的，關於如何 Code Review、與諸多好處，可以參考：
+
+Code Review Best Practices
+How Google Does Code Review
+LinkedIn’s Tips for Highly Effective Code Review
+
+但我發現有許多公司沒有 Code Reivew，所以蒐集了一些反對的原因：
+不做 Code Review 的原因
+1. 有 QA，不要有 Bug 就好，Code Review 沒太大意義
+我想這是誤會，Code Review 並不負責找出程式碼的錯誤，這也是很多 Reviewer 的誤區，Code Review 應該把力氣放在程式碼的品質，例如可讀性、維護性、擴展性等，錯誤應該是由測試來處理的。
+當然我不是說，不能在 Code Review 去檢查出 Bug，只是那並非 Code Review 主要目的。
+2. 需求變化太快，專案的生命週期短，寫好程式沒有意義，反正過沒多久就拋棄了
+如果是一次性的東西、短期的解決方案，的確不需要太高品質的程式碼，反正用沒多久就要丟了，但至少要 Review 一下這個短期的程式碼有沒有影響到長期程式碼吧? 如果整個專案全都是臨時的程式，那要思考一下自己的部門是否也是一個臨時部門?
+3. 時間太緊急，連 coding 都來不及，哪有時間 Code Reivew
+時間緊急、需求變化太快，其實與 Code Reivew 無關，而是管理的問題，這些問題也不該成為反對 Code Review 的理由；有些人能看到背後價值，堅持做對的事情，有些人因噎廢食，而人與人的不同就在此。
+Code Review 做不起來
+大家都知道 Code Review 的好，但以下情況會造成 Code Review 沒效果："/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://www.renyou.tech/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "不好好地 Code Review 怎麼行",
+      "item": "https://www.renyou.tech/posts/code-review/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "不好好地 Code Review 怎麼行",
+  "name": "不好好地 Code Review 怎麼行",
+  "description": "Code Review 的好處是沒有爭議的，關於如何 Code Review、與諸多好處，可以參考：\nCode Review Best Practices How Google Does Code Review LinkedIn’s Tips for Highly Effective Code Review 但我發現有許多公司沒有 Code Reivew，所以蒐集了一些反對的原因：\n不做 Code Review 的原因 1. 有 QA，不要有 Bug 就好，Code Review 沒太大意義\n我想這是誤會，Code Review 並不負責找出程式碼的錯誤，這也是很多 Reviewer 的誤區，Code Review 應該把力氣放在程式碼的品質，例如可讀性、維護性、擴展性等，錯誤應該是由測試來處理的。\n當然我不是說，不能在 Code Review 去檢查出 Bug，只是那並非 Code Review 主要目的。\n2. 需求變化太快，專案的生命週期短，寫好程式沒有意義，反正過沒多久就拋棄了\n如果是一次性的東西、短期的解決方案，的確不需要太高品質的程式碼，反正用沒多久就要丟了，但至少要 Review 一下這個短期的程式碼有沒有影響到長期程式碼吧? 如果整個專案全都是臨時的程式，那要思考一下自己的部門是否也是一個臨時部門?\n3. 時間太緊急，連 coding 都來不及，哪有時間 Code Reivew\n時間緊急、需求變化太快，其實與 Code Reivew 無關，而是管理的問題，這些問題也不該成為反對 Code Review 的理由；有些人能看到背後價值，堅持做對的事情，有些人因噎廢食，而人與人的不同就在此。\nCode Review 做不起來 大家都知道 Code Review 的好，但以下情況會造成 Code Review 沒效果：\n",
+  "keywords": [
+    "開發流程"
+  ],
+  "articleBody": "Code Review 的好處是沒有爭議的，關於如何 Code Review、與諸多好處，可以參考：\nCode Review Best Practices How Google Does Code Review LinkedIn’s Tips for Highly Effective Code Review 但我發現有許多公司沒有 Code Reivew，所以蒐集了一些反對的原因：\n不做 Code Review 的原因 1. 有 QA，不要有 Bug 就好，Code Review 沒太大意義\n我想這是誤會，Code Review 並不負責找出程式碼的錯誤，這也是很多 Reviewer 的誤區，Code Review 應該把力氣放在程式碼的品質，例如可讀性、維護性、擴展性等，錯誤應該是由測試來處理的。\n當然我不是說，不能在 Code Review 去檢查出 Bug，只是那並非 Code Review 主要目的。\n2. 需求變化太快，專案的生命週期短，寫好程式沒有意義，反正過沒多久就拋棄了\n如果是一次性的東西、短期的解決方案，的確不需要太高品質的程式碼，反正用沒多久就要丟了，但至少要 Review 一下這個短期的程式碼有沒有影響到長期程式碼吧? 如果整個專案全都是臨時的程式，那要思考一下自己的部門是否也是一個臨時部門?\n3. 時間太緊急，連 coding 都來不及，哪有時間 Code Reivew\n時間緊急、需求變化太快，其實與 Code Reivew 無關，而是管理的問題，這些問題也不該成為反對 Code Review 的理由；有些人能看到背後價值，堅持做對的事情，有些人因噎廢食，而人與人的不同就在此。\nCode Review 做不起來 大家都知道 Code Review 的好，但以下情況會造成 Code Review 沒效果：\n1. 能力不足\n菜雞互啄，分不清楚程式碼好與壞，Review 大多數力氣放在檢查 Bug、程式碼排版風格，上面講過 Code Review 不是在檢查 Bug，而程式碼排版風格是要用自動化去處理的，這些都是自己處理的事情，不要在 Code Review 浪費大家時間。\n對於能力不足的人，可以看看 Code Complete 這類的書，另外公司也該再找人了。\n2. 心態問題\n一種心態是懶，交差了事，甚至為自己爛程式碼辯護，因此更應該推動團隊的 Code Review，讓爛程式碼曝光在更多人面前；另一種懶是自掃門前雪，覺得某功能是其他人負責的，不想花時間去理解，自掃門前雪的風氣一旦蔓延，整個團隊會很被動，不可能做好事情。\n另一種心態是自負，有些人喜歡在 Code Review 批評、貶低別人，以顯得自己厲害，有這種心態的人就是所謂「半瓶水」；而被批評的人會產生反抗心態，於是團隊的 Code Review 淪為意氣之爭。\n請記住，程式最大的問題就是自負，特別是 Code Review 時，對象應該是程式碼，不是人。提交者要虛心接受建議，因為別人的建議是讓你做的更好；審核者則要用正面的態度提出意見，不要在 Code Review 去質疑別人的能力，因為那是你的隊友。我們不是一段程式碼，而是人。\nWe shall do a much better programming job, provided that we respect the intrinsic limitations of the human mind and approach the task as Very Humble Programmers.\n– Edsger W. Dijkstra\nDijkstra 在獲得圖靈獎的感言中說道，「唯有意識到人類內在思維的極限，並以謙虛的態度寫程式，才能達到更高境界。」\n3. 時間不夠、需求變化太快\n上面提到時間不夠、需求變化太快是管理問題，不是 Code Review 的問題，不要因噎廢食，那工程師具體的解決方式是：\n你是否思考過，PM 給出這麼多需求，那些是合理的? 那些是不合理的? 拿到需求請先問「為什麼要做?」、「影響範圍(效果)多大?」、「有多少客戶受益?」回答不清楚這些問題，沒有資料佐證就不做，PM 需要做很多調查研究的工作，不是光用想的，或是少數客戶在抱怨就要開需求 如果發生這些情況，工程師應該要教育、管理 PM，而非一昧的抱怨，然後淪為「沒關係，反正 PM 要就做給他，有問題也不關我的事，因為我是照規格開發」的擺爛心態，工程師要告訴 PM，「要把握好需求」、「要對放棄的功能與要做的功能感到同樣自豪」，「與其做好一個半成品，不如做半個好產品」，因為做好的半成品只會讓人失望，而半個好產品則會讓人期望 別抱怨需求變化太快，因為需求本來就會變，你該思考的是產品的方向是否一直改變? 如果方向不變，那你要培養能判斷未來可能需求的能力，如果方向一直改變，今天要往東，明天要往西，那這個產品也沒什麼出息 當你累得跟狗一樣時，請停下來想想，是否自己的思考、做事方式沒有比狗高明太多?\n總結 關於 Code Review 無用論的說法，其實都在抱怨其他問題，請不要混為一談。而 Code Review 做不起來的原因，我也提供了解決方法。最後我想說一句比較武斷的話，「沒有 Code Review 的公司都沒必要待，因為那一定是不尊重技術的公司」。\n一直用低標準做事情，會成習慣的。\n",
+  "wordCount" : "178",
+  "inLanguage": "en",
+  "datePublished": "2022-06-03T14:29:01+08:00",
+  "dateModified": "2022-06-03T14:29:01+08:00",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://www.renyou.tech/posts/code-review/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://www.renyou.tech/favicon.ico"
+    }
+  }
+}
+</script>
 </head>
 
 <body class="" id="top">
@@ -93,22 +209,22 @@ Code Review 做不起來
     <nav class="nav">
 	<ul id="menu">
             <li>
-                <a href="http://localhost:1313/categories/" title="Categories">
+                <a href="https://www.renyou.tech/categories/" title="Categories">
                     <span>Categories</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/" title="Home">
+                <a href="https://www.renyou.tech/" title="Home">
                     <span>Home</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/tags/" title="Tags">
+                <a href="https://www.renyou.tech/tags/" title="Tags">
                     <span>Tags</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/archives/" title="Archives">
+                <a href="https://www.renyou.tech/archives/" title="Archives">
                     <span>Archives</span>
                 </a>
             </li>
@@ -204,15 +320,15 @@ Code Review 做不起來
 
   <footer class="post-footer">
     <ul class="post-tags">
-      <li><a href="http://localhost:1313/tags/%E9%96%8B%E7%99%BC%E6%B5%81%E7%A8%8B/">開發流程</a></li>
+      <li><a href="https://www.renyou.tech/tags/%E9%96%8B%E7%99%BC%E6%B5%81%E7%A8%8B/">開發流程</a></li>
     </ul>
 <nav class="paginav">
-  <a class="prev" href="http://localhost:1313/posts/prototype-based-programming/">
+  <a class="prev" href="https://www.renyou.tech/posts/prototype-based-programming/">
     <span class="title">« Prev</span>
     <br>
     <span>Sorry，Prototype 真的可以為所欲為</span>
   </a>
-  <a class="next" href="http://localhost:1313/posts/object-oritend-programming/">
+  <a class="next" href="https://www.renyou.tech/posts/object-oritend-programming/">
     <span class="title">Next »</span>
     <br>
     <span>光看標題是學不會物件導向的</span>
@@ -224,7 +340,7 @@ Code Review 做不起來
     </main>
     
 <footer class="footer">
-    <span>&copy; 2025 <a href="http://localhost:1313/"></a></span>
+    <span>&copy; 2025 <a href="https://www.renyou.tech/"></a></span>
 </footer>
 <a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
