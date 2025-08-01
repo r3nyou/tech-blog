@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title></title>
-    <link>https://marc-tech.zeabur.app/</link>
+    <link>http://localhost:1313/</link>
     <description>Recent content on </description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-tw</language>
-    <lastBuildDate>Sun, 27 Jul 2025 21:28:36 +0800</lastBuildDate><atom:link href="https://marc-tech.zeabur.app/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 27 Jul 2025 21:28:36 +0800</lastBuildDate><atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>水球軟體學院 「用 BDD 實現百倍效率的 Vibe Coding」心得</title>
-      <link>https://marc-tech.zeabur.app/posts/wsa-ai-bdd-note/</link>
+      <link>http://localhost:1313/posts/wsa-ai-bdd-note/</link>
       <pubDate>Sun, 27 Jul 2025 21:28:36 +0800</pubDate>
       
-      <guid>https://marc-tech.zeabur.app/posts/wsa-ai-bdd-note/</guid>
+      <guid>http://localhost:1313/posts/wsa-ai-bdd-note/</guid>
       <description>&lt;p&gt;這篇文章記錄了我參加了水球軟體學院的 workshop「用 BDD 實現百倍效率的 Vibe Coding」的心得。&lt;/p&gt;
 &lt;p&gt;&lt;a href=&#34;https://waterballsa.tw/design-pattern/&#34;&gt;https://waterballsa.tw/design-pattern/&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;課程當天蠻輕鬆的，一直指揮 AI 寫程式 XD，但收穫卻很豐富。因為水球潘示範的很清楚，一開始先示範大部分人（包括我 XD）現在是怎麼跟 AI 協作的，基本上就是：下 prompt → 等 AI 寫完程式 → 花很多時間 review。運氣好的話不用改，但大部分還是需要改。&lt;/p&gt;
@@ -23,6 +23,14 @@
 &lt;/ol&gt;
 &lt;p&gt;當天上課就是循序漸進示範，如何能做到 95% 正確率，而且如果要做到更高正確率，也有說明可能的做法了。&lt;/p&gt;
 &lt;p&gt;其實我當工程師也 6 年了，有時候會覺得上班到有點麻木。但在 AI 出現後，而且上完課得到一個超酷的方法論，我又燃起熱血的心，覺得很新鮮很有趣，覺得躍躍欲試～&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;課程中最震撼、最突破認知的部分？&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;BDD 開發流程原子化，把每一個步驟拆到最小，把每一個步驟做到最好。&lt;/p&gt;
+&lt;p&gt;和 AI 建立共識，別讓 AI 自由發揮。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;最欣賞講師教學的哪個地方？&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;除了認知以外，更有收穫的是「激發我完成事情的渴望」，現在覺得寫程式更有趣了，也想應用在工作中。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;為什麼這門課值得一上？你會推薦給哪一種工程師？&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;推薦所有軟體工程師。&lt;/p&gt;
+&lt;p&gt;AI 讓「建立共識」能提高工程效率，而且非常容易 demo、讓別人理解好處，我們應該使用這個時代的機會，當成槓桿，升級自己的職涯，不再只是把需求翻譯成程式碼的角色而已。&lt;/p&gt;
 &lt;p&gt;以下是筆記&lt;/p&gt;
 &lt;h2 id=&#34;一軟體工程的本質與-ai-的挑戰&#34;&gt;一、軟體工程的本質與 AI 的挑戰&lt;/h2&gt;
 &lt;p&gt;軟體工程的本質問題，就是功能需求的詮釋有模糊空間。AI 永遠有腦補空間，只要不是 100%，就不是全自動化軟體工程。&lt;/p&gt;
@@ -105,10 +113,10 @@
     
     <item>
       <title>針對遺留代碼加入單元測試的藝術 上課心得</title>
-      <link>https://marc-tech.zeabur.app/posts/91-unit-test-course/</link>
+      <link>http://localhost:1313/posts/91-unit-test-course/</link>
       <pubDate>Sun, 22 Jan 2023 16:24:56 +0800</pubDate>
       
-      <guid>https://marc-tech.zeabur.app/posts/91-unit-test-course/</guid>
+      <guid>http://localhost:1313/posts/91-unit-test-course/</guid>
       <description>&lt;p&gt;如果你在考慮要不要上 91 的&lt;a href=&#34;https://tdd.best/courses/unit-testing-gracefully-with-legacy-code-202301/&#34;&gt;針對遺留代碼加入單元測試的藝術&lt;/a&gt;，我建議趕快報名，因為我上完發現單元測試的手法/技巧都只是皮毛，真正重要的是單元測試的使用思維、其代價與限制、以及真正能提高產品的品質的單元測試是什麼樣子，這些全局宏觀的想法，看書或和同事討論單點的問題是解決不了的，有時候問題不是像打乒乓球一樣一來一往，而是需要更高的思維才能解決到真正核心問題，上完這門課才知道什麼是降維打擊，以及自己過去的理解有多單薄，各位可以試著回答以下問題並捫心自問是否有足夠的說服力，我的心得是上完課後，自己對這些問題的回答已經不是單純條理地回答，而是會很自然的認為/感覺答案本該如此，且我知道如何實際去做到。&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;若專案僅包含一堆 CRUD 操作，這類專案的單元測試該從何下手？&lt;/li&gt;
@@ -146,10 +154,10 @@
     
     <item>
       <title>請協助做好委派的工作</title>
-      <link>https://marc-tech.zeabur.app/posts/go-delegate/</link>
+      <link>http://localhost:1313/posts/go-delegate/</link>
       <pubDate>Sat, 02 Jul 2022 10:42:50 +0800</pubDate>
       
-      <guid>https://marc-tech.zeabur.app/posts/go-delegate/</guid>
+      <guid>http://localhost:1313/posts/go-delegate/</guid>
       <description>&lt;p&gt;之前介紹過 Prototype-based programming，Golang 利用委派 delegate 也能做到。&lt;/p&gt;
 &lt;h2 id=&#34;委派的範例&#34;&gt;委派的範例&lt;/h2&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Widget&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; {
@@ -187,10 +195,10 @@
     
     <item>
       <title>Sorry，Prototype 真的可以為所欲為</title>
-      <link>https://marc-tech.zeabur.app/posts/prototype-based-programming/</link>
+      <link>http://localhost:1313/posts/prototype-based-programming/</link>
       <pubDate>Wed, 15 Jun 2022 10:57:38 +0800</pubDate>
       
-      <guid>https://marc-tech.zeabur.app/posts/prototype-based-programming/</guid>
+      <guid>http://localhost:1313/posts/prototype-based-programming/</guid>
       <description>&lt;p&gt;之前在 &lt;a href=&#34;../object-oritend-programming&#34;&gt;物件導向的文章&lt;/a&gt; 中介紹了基於類別的物件導向設計，還有另一種特別的物件導向設計，被稱為原型程式設計 Prototype-based programming。沒有 class，直接使用物件，例如 JavaScript。&lt;/p&gt;
 &lt;p&gt;與傳統物件導向的差別在：&lt;/p&gt;
 &lt;ul&gt;
@@ -225,10 +233,10 @@
     
     <item>
       <title>不好好地 Code Review 怎麼行</title>
-      <link>https://marc-tech.zeabur.app/posts/code-review/</link>
+      <link>http://localhost:1313/posts/code-review/</link>
       <pubDate>Fri, 03 Jun 2022 14:29:01 +0800</pubDate>
       
-      <guid>https://marc-tech.zeabur.app/posts/code-review/</guid>
+      <guid>http://localhost:1313/posts/code-review/</guid>
       <description>&lt;p&gt;Code Review 的好處是沒有爭議的，關於如何 Code Review、與諸多好處，可以參考：&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://blog.palantir.com/code-review-best-practices-19e02780015f&#34;&gt;Code Review Best Practices&lt;/a&gt;&lt;/li&gt;
@@ -250,10 +258,10 @@
     
     <item>
       <title>光看標題是學不會物件導向的</title>
-      <link>https://marc-tech.zeabur.app/posts/object-oritend-programming/</link>
+      <link>http://localhost:1313/posts/object-oritend-programming/</link>
       <pubDate>Fri, 27 May 2022 10:20:05 +0800</pubDate>
       
-      <guid>https://marc-tech.zeabur.app/posts/object-oritend-programming/</guid>
+      <guid>http://localhost:1313/posts/object-oritend-programming/</guid>
       <description>&lt;p&gt;既然點進來看內文了，這篇文章是介紹物件導向程式設計方法。&lt;/p&gt;
 &lt;p&gt;之前在 &lt;a href=&#34;../functional-programming&#34;&gt;Functional programming 的文章&lt;/a&gt;介紹過，Functional programming 是透過組合各種函式來完成功能，函式是計算過程的抽象，但程式碼除了計算過程以外，還需要處理資料，也就是所謂的「狀態」，關於狀態的處理，就需要提到物件導向程式設計 (Object-oriented programming)。&lt;/p&gt;
 &lt;p&gt;所謂物件指的是類別的實體，把物件當成程式的基本單位，並將資料封裝在其中，程式會被設計成一個個獨立的物件，每個物件都要能接受資料、處理資料、傳資料給其他物件，好比一個個小型的機器一樣，各自獨立，且彼此互相關聯。這與傳統的程式設計方法不同，傳統的想法是把程式設計成一系列對機器的指令、或者一系列函式的集合。&lt;/p&gt;
@@ -279,7 +287,7 @@
 &lt;li&gt;四種屬性：價格、重量、密度、燃點&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;物件導向設計為下圖：
-&lt;img loading=&#34;lazy&#34; src=&#34;https://marc-tech.zeabur.app/img/object-oritend-programming/object-composition-uml.png&#34; alt=&#34;object composition uml&#34;  /&gt;
+&lt;img loading=&#34;lazy&#34; src=&#34;http://localhost:1313/img/object-oritend-programming/object-composition-uml.png&#34; alt=&#34;object composition uml&#34;  /&gt;
 &lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;材質類別 Material，有密度、燃點屬性&lt;/li&gt;
@@ -305,10 +313,10 @@
     
     <item>
       <title>寫日誌這種事，不管到幾歲都討厭</title>
-      <link>https://marc-tech.zeabur.app/posts/work-diary/</link>
+      <link>http://localhost:1313/posts/work-diary/</link>
       <pubDate>Mon, 16 May 2022 21:33:26 +0800</pubDate>
       
-      <guid>https://marc-tech.zeabur.app/posts/work-diary/</guid>
+      <guid>http://localhost:1313/posts/work-diary/</guid>
       <description>&lt;blockquote&gt;
 &lt;p&gt;這篇文是紀念來二天就離職的同事&lt;/p&gt;&lt;/blockquote&gt;
 &lt;p&gt;新同事來二天就離職，說每天晨會要報告工作進度、寫工作日誌，壓力太大。&lt;/p&gt;
@@ -327,10 +335,10 @@
     
     <item>
       <title>Functional programming 到底是什麼鬼</title>
-      <link>https://marc-tech.zeabur.app/posts/functional-programming/</link>
+      <link>http://localhost:1313/posts/functional-programming/</link>
       <pubDate>Sun, 15 May 2022 21:21:19 +0800</pubDate>
       
-      <guid>https://marc-tech.zeabur.app/posts/functional-programming/</guid>
+      <guid>http://localhost:1313/posts/functional-programming/</guid>
       <description>&lt;p&gt;在&lt;a href=&#34;../generic-programming&#34;&gt;這次是對泛型 Generic programming 的思考&lt;/a&gt;文中，講了泛型的本質就是對型別的抽象，這篇文將介紹更抽象的程式設計方法，函式語言程式設計(Functional programming) 到底是甚麼鬼。&lt;/p&gt;
 &lt;h2 id=&#34;函式語言程式設計&#34;&gt;函式語言程式設計&lt;/h2&gt;
 &lt;p&gt;Functional programming 的理念來自數學的代數。&lt;/p&gt;
@@ -377,10 +385,10 @@ h(x)=f(x)+g(x)=9x^2+3x+7
     
     <item>
       <title>這次是對 Generic programming 的思考</title>
-      <link>https://marc-tech.zeabur.app/posts/generic-programming/</link>
+      <link>http://localhost:1313/posts/generic-programming/</link>
       <pubDate>Sun, 01 May 2022 20:46:22 +0800</pubDate>
       
-      <guid>https://marc-tech.zeabur.app/posts/generic-programming/</guid>
+      <guid>http://localhost:1313/posts/generic-programming/</guid>
       <description>&lt;p&gt;程式寫了幾年後，有了些感性認識，無論是想寫的更好，或想學其他語言但覺得太多種學不完、也不知道怎麼學，只學了表面。&lt;/p&gt;
 &lt;p&gt;如果你也有一樣的疑問，不妨瞭解下 Programming Paradigm 程式設計方法，透過程式語言的發展歷史，瞭解主流的幾種程式語言的特性，在比較與歸納中去思考程式設計的本質為何？從更高的維度去思考，就能提高程式設計能力。&lt;/p&gt;
 &lt;p&gt;Programming Paradigm 將程式語言分成不同的設計風格，這系列文章會透過幾種語言(C、C++、Java、Go、Python、JavaScript)來了解「如何寫出更通用、可重用的程式」。&lt;/p&gt;
