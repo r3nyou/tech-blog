@@ -2,63 +2,63 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://localhost:1313/</loc>
+    <loc>https://marc-tech.zeabur.app/</loc>
     <lastmod>2025-07-27T21:28:36+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/</loc>
+    <loc>https://marc-tech.zeabur.app/posts/</loc>
     <lastmod>2025-07-27T21:28:36+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/wsa-ai-bdd-note/</loc>
+    <loc>https://marc-tech.zeabur.app/posts/wsa-ai-bdd-note/</loc>
     <lastmod>2025-07-27T21:28:36+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/91-unit-test-course/</loc>
+    <loc>https://marc-tech.zeabur.app/posts/91-unit-test-course/</loc>
     <lastmod>2023-01-22T16:24:56+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/categories/</loc>
+    <loc>https://marc-tech.zeabur.app/categories/</loc>
     <lastmod>2022-07-02T10:42:50+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/categories/programming-paradigm/</loc>
+    <loc>https://marc-tech.zeabur.app/categories/programming-paradigm/</loc>
     <lastmod>2022-07-02T10:42:50+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/</loc>
+    <loc>https://marc-tech.zeabur.app/tags/</loc>
     <lastmod>2022-07-02T10:42:50+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/%E7%A8%8B%E5%BC%8F%E8%A8%AD%E8%A8%88/</loc>
+    <loc>https://marc-tech.zeabur.app/tags/%E7%A8%8B%E5%BC%8F%E8%A8%AD%E8%A8%88/</loc>
     <lastmod>2022-07-02T10:42:50+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/go-delegate/</loc>
+    <loc>https://marc-tech.zeabur.app/posts/go-delegate/</loc>
     <lastmod>2022-07-02T10:42:50+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/prototype-based-programming/</loc>
+    <loc>https://marc-tech.zeabur.app/posts/prototype-based-programming/</loc>
     <lastmod>2022-06-15T10:57:38+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/code-review/</loc>
+    <loc>https://marc-tech.zeabur.app/posts/code-review/</loc>
     <lastmod>2022-06-03T14:29:01+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/categories/%E9%96%8B%E7%99%BC%E6%B5%81%E7%A8%8B/</loc>
+    <loc>https://marc-tech.zeabur.app/categories/%E9%96%8B%E7%99%BC%E6%B5%81%E7%A8%8B/</loc>
     <lastmod>2022-06-03T14:29:01+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/%E9%96%8B%E7%99%BC%E6%B5%81%E7%A8%8B/</loc>
+    <loc>https://marc-tech.zeabur.app/tags/%E9%96%8B%E7%99%BC%E6%B5%81%E7%A8%8B/</loc>
     <lastmod>2022-06-03T14:29:01+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/object-oritend-programming/</loc>
+    <loc>https://marc-tech.zeabur.app/posts/object-oritend-programming/</loc>
     <lastmod>2022-05-27T10:20:05+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/work-diary/</loc>
+    <loc>https://marc-tech.zeabur.app/posts/work-diary/</loc>
     <lastmod>2022-05-16T21:33:26+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/categories/%E8%81%B7%E5%A0%B4/</loc>
+    <loc>https://marc-tech.zeabur.app/categories/%E8%81%B7%E5%A0%B4/</loc>
     <lastmod>2022-05-16T21:33:26+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/%E8%81%B7%E5%A0%B4/</loc>
+    <loc>https://marc-tech.zeabur.app/tags/%E8%81%B7%E5%A0%B4/</loc>
     <lastmod>2022-05-16T21:33:26+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/functional-programming/</loc>
+    <loc>https://marc-tech.zeabur.app/posts/functional-programming/</loc>
     <lastmod>2022-05-15T21:21:19+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/generic-programming/</loc>
+    <loc>https://marc-tech.zeabur.app/posts/generic-programming/</loc>
     <lastmod>2022-05-01T20:46:22+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/archives/</loc>
+    <loc>https://marc-tech.zeabur.app/archives/</loc>
   </url>
 </urlset>
